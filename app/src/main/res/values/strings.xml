@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Thermometer</string>
+    <string name="warning">No Ambient Temperature Sensor !</string>
+
+</resources>

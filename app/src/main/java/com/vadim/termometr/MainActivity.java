@@ -5,7 +5,10 @@ import androidx.core.app.NotificationCompat;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -83,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
     private float getTemperatureCPU(){
         Process process;
+        Intent intent = new Intent(this,BroadcastReceverNotification.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 12, intent, 0);
+
         try {
             process = Runtime.getRuntime().exec("cat sys/devices/virtual/thermal/thermal_zone0/temp");
             process.waitFor();
@@ -98,19 +104,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             return 0.0f;
         }
-    }
-
-    private void notificationTemperature(String title){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText("Notification text");
-
-        Notification notification = builder.build();
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
     }
 
 

@@ -3,6 +3,7 @@ package com.vadim.termometr;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -86,8 +87,10 @@ public class MainActivity extends AppCompatActivity {
 
     private float getTemperatureCPU(){
         Process process;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,BroadcastReceverNotification.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 12, intent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
         try {
             process = Runtime.getRuntime().exec("cat sys/devices/virtual/thermal/thermal_zone0/temp");

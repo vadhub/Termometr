@@ -1,7 +1,10 @@
 package com.vadim.termometr;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -96,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
             return 0.0f;
         }
     }
+
+    private void notificationTemperature(String title){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText("Notification text");
+
+        Notification notification = builder.build();
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notification);
+    }
+
 
 
 }

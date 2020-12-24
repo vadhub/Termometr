@@ -1,5 +1,7 @@
 package com.vadim.termometr;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -11,6 +13,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
+
+import androidx.core.app.NotificationCompat;
 
 public class Termometr extends View {
 
@@ -189,6 +193,7 @@ public class Termometr extends View {
             startGraduation -= inc;
         }
     }
+
 
 }
 

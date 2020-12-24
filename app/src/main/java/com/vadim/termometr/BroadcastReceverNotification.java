@@ -18,10 +18,12 @@ public class BroadcastReceverNotification extends BroadcastReceiver {
     }
 
     private void notificationTemperature(String title, Context context){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
-                .setContentText("Notification text");
+                .setContentText("Notification text")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
 
         Notification notification = builder.build();
 

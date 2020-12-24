@@ -89,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
         Process process;
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,BroadcastReceverNotification.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 12, intent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+
 
         try {
             process = Runtime.getRuntime().exec("cat sys/devices/virtual/thermal/thermal_zone0/temp");
@@ -99,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
             String line = reader.readLine();
             if(line!=null) {
                 float temp = Float.parseFloat(line);
+                intent.putExtra("temper", temp / 1000.0f);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 12, intent, 0);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
                 return temp / 1000.0f;
             }else{
                 return 30.0f;

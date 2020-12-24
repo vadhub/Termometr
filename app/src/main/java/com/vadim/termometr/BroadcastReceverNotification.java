@@ -12,7 +12,9 @@ public class BroadcastReceverNotification extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        float temp = intent.getFloatExtra("temper", 0);
+        String srt = String.valueOf(temp);
+        notificationTemperature(srt, context);
     }
 
     private void notificationTemperature(String title, Context context){

@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -26,9 +27,11 @@ public class BroadcastReceverNotification extends BroadcastReceiver {
 
 
         Notification notification = builder.build();
-
+        Toast.makeText(context, "ypoug", Toast.LENGTH_SHORT).show();
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
+
+
     }
 }

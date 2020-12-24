@@ -15,6 +15,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.app.PendingIntent.getBroadcast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,12 +64,26 @@ public class MainActivity extends AppCompatActivity {
         temper = (TextView) findViewById(R.id.temterature);
         thermometer = (Termometr) findViewById(R.id.thermometer);
 
+
         simulateAmbientTemperature();
+    }
+
+    public void onClickList(View view){
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,BroadcastReceverNotification.class);
+        final PendingIntent[] pendingIntent = new PendingIntent[1];
+        intent.putExtra("temper", 30);
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        pendingIntent[0] = getBroadcast(getApplicationContext(), 12, intent,0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent[0]);
+
     }
 
 
     private void simulateAmbientTemperature() {
         timer = new Timer();
+
 
         timer.scheduleAtFixedRate(new TimerTask() {
 
@@ -77,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         thermometer.setCurrentTemp(temperature);
                         getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + temperature);
                     }
@@ -87,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
     private float getTemperatureCPU(){
         Process process;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this,BroadcastReceverNotification.class);
 
 
         try {
@@ -98,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
             String line = reader.readLine();
             if(line!=null) {
                 float temp = Float.parseFloat(line);
-                intent.putExtra("temper", temp / 1000.0f);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 12, intent, 0);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
                 return temp / 1000.0f;
             }else{
                 return 30.0f;

@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         pendingIntent[0] = getBroadcast(getApplicationContext(), 12, intent,0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent[0]);
+        Toast.makeText(this, "TRTRT", Toast.LENGTH_SHORT).show();
 
     }
 

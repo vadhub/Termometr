@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 public class BroadcastReceverNotification extends BroadcastReceiver {
 
@@ -19,18 +20,18 @@ public class BroadcastReceverNotification extends BroadcastReceiver {
     }
 
     private void notificationTemperature(String title, Context context){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.CHANNEL_ID)
+        Notification builder = new NotificationCompat.Builder(context, NotificationHelper.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText("Notification text")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build();
 
 
-        Notification notification = builder.build();
+
         Toast.makeText(context, "ypoug", Toast.LENGTH_SHORT).show();
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(1, builder);
 
 
     }

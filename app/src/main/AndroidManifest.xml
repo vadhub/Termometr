@@ -19,11 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".BroadcastReceverNotification" android:enabled="true">
-                <intent-filter>
-                    <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
-                </intent-filter>
-        </receiver>
+        <receiver android:name=".BroadcastReceverNotification">
+</receiver>
     </application>
 
 </manifest>

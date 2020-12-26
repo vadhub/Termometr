@@ -27,8 +27,6 @@ public class BroadcastReceverNotification extends BroadcastReceiver {
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT).build();
 
-
-
         Toast.makeText(context, "ypoug", Toast.LENGTH_SHORT).show();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(1, builder);

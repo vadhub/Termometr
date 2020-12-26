@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <receiver android:name=".BroadcastReceverNotification">
-</receiver>
+        </receiver>
     </application>
 
 </manifest>

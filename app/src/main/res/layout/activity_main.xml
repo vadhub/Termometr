@@ -41,18 +41,5 @@
         ads:adUnitId="ca-app-pub-1307594940838625~7527188963">
     </com.google.android.gms.ads.AdView>
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="0dp"
-        android:onClick="onClickList"
-        android:text="Button" />
-
 
 </RelativeLayout>

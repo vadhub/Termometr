@@ -2,6 +2,7 @@ package com.vadim.termometr;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -69,14 +70,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void outTemper(float temperat){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this,BroadcastReceverNotification.class);
-        final PendingIntent[] pendingIntent = new PendingIntent[1];
-        intent.putExtra("temper", temperat);
-        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        pendingIntent[0] = getBroadcast(getApplicationContext(), 12, intent,0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent[0]);
-        Toast.makeText(this, "TRTRT", Toast.LENGTH_SHORT).show();
+
+        String t = String.valueOf(temperat);
+
+        Notification builder = new NotificationCompat.Builder(this, NotificationHelper.CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(t)
+                    .setContentText("Notification text")
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT).build();
+
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1, builder);
+
+
+
+        Toast.makeText(this, BroadcastReceverNotification.class.toString(), Toast.LENGTH_SHORT).show();
 
     }
 

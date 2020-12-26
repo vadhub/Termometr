@@ -16,21 +16,8 @@ public class BroadcastReceverNotification extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         float temp = intent.getFloatExtra("temper", 0);
         String srt = String.valueOf(temp);
-        notificationTemperature(srt, context);
-    }
-
-    private void notificationTemperature(String title, Context context){
-        Notification builder = new NotificationCompat.Builder(context, NotificationHelper.CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText("Notification text")
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build();
-
-        Toast.makeText(context, "ypoug", Toast.LENGTH_SHORT).show();
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(1, builder);
-
+        Toast.makeText(context, (int) temp, Toast.LENGTH_SHORT).show();
 
     }
+
 }

@@ -76,15 +76,15 @@ public class MainActivity extends AppCompatActivity {
         Notification builder = new NotificationCompat.Builder(this, NotificationHelper.CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(t)
-                    .setContentText("Notification text")
-                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .setOngoing(true)
+                    .setAutoCancel(false)
+                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT).build();
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, builder);
 
-        Toast.makeText(this, BroadcastReceverNotification.class.toString(), Toast.LENGTH_SHORT).show();
 
     }
 

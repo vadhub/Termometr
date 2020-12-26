@@ -68,12 +68,22 @@ public class MainActivity extends AppCompatActivity {
         simulateAmbientTemperature();
     }
 
-    private void simulateAmbientTemperature() {
-        timer = new Timer();
-
+    public void outTemper(float temperat){
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,BroadcastReceverNotification.class);
         final PendingIntent[] pendingIntent = new PendingIntent[1];
+        intent.putExtra("temper", temperat);
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        pendingIntent[0] = getBroadcast(getApplicationContext(), 12, intent,0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent[0]);
+        Toast.makeText(this, "TRTRT", Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    private void simulateAmbientTemperature() {
+        timer = new Timer();
+
 
         timer.scheduleAtFixedRate(new TimerTask() {
 
@@ -84,10 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        intent.putExtra("temper", 30);
-                        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-                        pendingIntent[0] = getBroadcast(getApplicationContext(), 12, intent,0);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, 0, pendingIntent[0]);
+                        outTemper(temperature);
                         thermometer.setCurrentTemp(temperature);
                         getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + temperature);
                     }

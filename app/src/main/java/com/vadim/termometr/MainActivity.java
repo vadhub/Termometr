@@ -84,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, builder);
 
-
-
         Toast.makeText(this, BroadcastReceverNotification.class.toString(), Toast.LENGTH_SHORT).show();
 
     }
@@ -93,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void simulateAmbientTemperature() {
         timer = new Timer();
-
 
         timer.scheduleAtFixedRate(new TimerTask() {
 

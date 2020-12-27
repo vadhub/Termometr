@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         simulateAmbientTemperature();
+        startService(new Intent(this, ServiceBackgrounTemperature.class));
     }
 
     public void outTemper(float temperat){
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, builder);
-
 
     }
 

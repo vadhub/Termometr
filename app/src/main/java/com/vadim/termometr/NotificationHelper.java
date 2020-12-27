@@ -17,7 +17,7 @@ public class NotificationHelper extends Application {
 
     private void createChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_MIN);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(notificationChannel);
         }

@@ -53,15 +53,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        adView = new AdView(this);
+        //adView = new AdView(this);
 
-        adView.setAdSize(AdSize.BANNER);
-
-        adView.setAdUnitId("ca-app-pub-1307594940838625~7527188963");
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        adView.loadAd(adRequest);
+//        adView.setAdSize(AdSize.BANNER);
+//
+//        adView.setAdUnitId("ca-app-pub-1307594940838625~7527188963");
+//
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//
+//        adView.loadAd(adRequest);
         temper = (TextView) findViewById(R.id.temterature);
         thermometer = (Termometr) findViewById(R.id.thermometer);
 
@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
                     .setContentTitle(t)
                     .setOngoing(true)
                     .setAutoCancel(false)
-                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT).build();
+                    .setTicker(t)
+                .build();
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);

@@ -90,8 +90,7 @@ public class ServiceBackgrounTemperature extends Service {
                 .setContentTitle(t)
                 .setOngoing(true)
                 .setAutoCancel(false)
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build();
+                .setTicker(t).build();
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);

@@ -10,6 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Termometr">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1307594940838625~7527188963"/>
         <activity android:name="com.vadim.termometr.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ServiceBackgrounTemperature"/>
+        <service android:name=".ServiceBackgrounTemperature" android:enabled="true"/>
     </application>
 
 </manifest>

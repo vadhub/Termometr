@@ -4,21 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -31,8 +21,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static android.app.PendingIntent.getBroadcast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,15 +41,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        //adView = new AdView(this);
+        adView = new AdView(this);
 
-//        adView.setAdSize(AdSize.BANNER);
-//
-//        adView.setAdUnitId("ca-app-pub-1307594940838625~7527188963");
-//
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//
-//        adView.loadAd(adRequest);
+        adView.setAdSize(AdSize.BANNER);
+
+        adView.setAdUnitId("ca-app-pub-1307594940838625~7527188963");
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        adView.loadAd(adRequest);
         temper = (TextView) findViewById(R.id.temterature);
         thermometer = (Termometr) findViewById(R.id.thermometer);
 

@@ -1,6 +1,7 @@
 package com.vadim.termometr;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -18,11 +19,13 @@ import java.util.TimerTask;
 public class ServiceBackgrounTemperature extends Service {
     private float temperature;
     private Timer timer;
+    private NotificationManagerCompat notificationManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         timer = new Timer();
+        notificationManager = NotificationManagerCompat.from(this);
     }
 
     @Nullable
@@ -85,15 +88,17 @@ public class ServiceBackgrounTemperature extends Service {
 
         String t = String.valueOf(temperat);
 
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         Notification builder = new NotificationCompat.Builder(this, NotificationHelper.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(t)
                 .setOngoing(true)
                 .setAutoCancel(false)
+                .setContentIntent(resultPendingIntent)
                 .setTicker(t).build();
 
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, builder);
 
 

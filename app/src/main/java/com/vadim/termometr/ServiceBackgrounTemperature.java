@@ -92,14 +92,14 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(t+"°")
                 .setOngoing(true)
                 .setAutoCancel(false)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setTicker(t).build();
 
         startForeground(1, builder);
@@ -109,6 +109,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }

@@ -96,6 +96,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 .setContentTitle(t+"°")
                 .setOngoing(true)
                 .setAutoCancel(false)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

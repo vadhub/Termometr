@@ -7,19 +7,18 @@
     tools:context=".MainActivity">
 
     <com.vadim.termometr.Termometr
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="80dp"
         android:id="@+id/thermometer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="80dp"
         app:innerColor="@color/innerColor"
         app:middleColor="@color/middleColor"
         app:outerColor="@color/outerColor"
-        app:radius="60dp"
-        />
+        app:radius="60dp" />
 
     <TextView
         android:id="@+id/temterature"
@@ -30,16 +29,25 @@
         android:textColor="@color/outerColor"
         android:text="" />
 
+    <!--ca-app-pub-3940256099942544/6300978111-->
+    <!--MY   ca-app-pub-5356301729869498/3710301649-->
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-1307594940838625~7527188963">
+        ads:adUnitId="ca-app-pub-5356301729869498/3710301649">
     </com.google.android.gms.ads.AdView>
+
+    <Switch
+        android:id="@+id/switchService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/start_notification" />
 
 
 </RelativeLayout>

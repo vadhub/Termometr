@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Термометр</string>
-    <string name="warning">Не обнаружено датчиков температуры</string>
+    <string name="warning">Не обнаружено датчиков температуры!</string>
+    <string name="start_notification">Показывать уведомление</string>
+    <string name="service_stop">Служба остановлена</string>
 </resources>

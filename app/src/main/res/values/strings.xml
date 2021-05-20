@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Thermometer</string>
-    <string name="warning">No Ambient Temperature Sensor !</string>
+    <string name="warning">No Ambient Temperature Sensor!</string>
+    <string name="item1" translatable="false">Start service</string>
+    <string name="item2" translatable="false">Stop service</string>
+    <string name="start_notification">Show notification</string>
+    <string name="service_stop">Service Stop</string>
 
 </resources>

@@ -3,7 +3,6 @@ package com.vadim.termometr;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float temper_aut;
     private AdView mAdView;
     private Switch aSwitchService;
-    private boolean isCelsia = true;
+
     private SharedPreferences sPref;
     private Handler handler;
     private Intent service;
@@ -110,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void run() {
                 temperature = getTemperatureCPU();
-                visibleTemperature(temperature, isCelsia);
+                visibleTemperature(temperature, loadChangedTypeTemperature());
                 handler.postDelayed(this, 1000);
             }
         });
@@ -130,16 +129,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.celsius_menu:
-                isCelsia=true;
-                saveChangedTypeTemperature(isCelsia);
+                saveChangedTypeTemperature(true);
                 break;
 
             case R.id.fahrenheit_menu:
-                isCelsia=false;
-                saveChangedTypeTemperature(isCelsia);
+                saveChangedTypeTemperature(false);
                 break;
         }
-        return super.onOptionsItemSelected(item);
+
+        saveChangedTypeTemperature(loadChangedTypeTemperature());
+        Toast.makeText(this, ""+loadChangedTypeTemperature(), Toast.LENGTH_SHORT).show();
+        if(loadState()){
+            restartService();
+        }
+        return true;
     }
     //visible temperature
     private void visibleTemperature(float temperature, boolean isCelsia){
@@ -163,13 +166,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         temper_aut = event.values[0];
-        visibleTemperature(temper_aut, isCelsia);
+        visibleTemperature(temper_aut, loadChangedTypeTemperature());
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    //restart notification service
+    private void restartService(){
+        stopService(service);
+        notificationClear(1);
+        startService(service);
+    }
 
     //save check state
     private void saveState(boolean isCheck){
@@ -189,7 +198,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sPref = getSharedPreferences("temperature_",MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("isCheckTypeTemperature", isCheckTypeTemperature);
-        ed.commit();
+        ed.apply();
+    }
+
+    private boolean loadChangedTypeTemperature(){
+        SharedPreferences sPref = getSharedPreferences("temperature_", MODE_PRIVATE);
+        return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
     //Temperature

@@ -104,6 +104,9 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setTicker(getTemperatureChanged(temperat, loadChangedTypeTemperature())).build();
 
+        System.out.println(loadChangedTypeTemperature());
+        Toast.makeText(this, ""+loadChangedTypeTemperature(), Toast.LENGTH_SHORT).show();
+
         startForeground(1, builder);
     }
 
@@ -121,13 +124,13 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
-    private String getTemperatureChanged(float temperature, boolean isCelasia){
+    private String getTemperatureChanged(float temperature, boolean isCelsia){
         String temper = String.format("%.0f", temperature) + "C°";
-        if(!isCelasia){
+
+        if(!isCelsia){
             float fareng = Convertor.fahrenheit(temperature);
             temper = String.format("%.0f", fareng) + "F°";
         }
-
         return temper;
     }
 

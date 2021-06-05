@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 temperature = getTemperatureCPU();
                 str[0] = String.format("%.0f", temperature);
                 thermometer.setCurrentTemp(temperature);
-                getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + str[0]+"°");
+                getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + str[0]+"C°");
                 handler.postDelayed(this, 1000);
             }
         });
@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         temper_aut = event.values[0];
 
         thermometer.setCurrentTemp(temper_aut);
-        System.out.println(temper_aut);
-        getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + temper_aut+"°");
+
+        getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + temper_aut+"C°");
     }
 
     @Override

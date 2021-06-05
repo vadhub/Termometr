@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -30,14 +31,12 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
     private Handler handler;
-    private boolean isCelsia;
     private boolean isLife;
 
     public static final String CHANNEL_ID = "service";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        isCelsia = true;
         isLife = true;
         return START_NOT_STICKY;
     }
@@ -96,14 +95,14 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
 
         Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle(getTemperatureChanged(temperat, isCelsia))
+                .setContentTitle(getTemperatureChanged(temperat, loadChangedTypeTemperature()))
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setTicker(getTemperatureChanged(temperat, isCelsia)).build();
+                .setTicker(getTemperatureChanged(temperat, loadChangedTypeTemperature())).build();
 
         startForeground(1, builder);
     }
@@ -115,6 +114,11 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
             notificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+    }
+
+    private boolean loadChangedTypeTemperature(){
+        SharedPreferences sPref = getSharedPreferences("temperature_", MODE_PRIVATE);
+        return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
     private String getTemperatureChanged(float temperature, boolean isCelasia){

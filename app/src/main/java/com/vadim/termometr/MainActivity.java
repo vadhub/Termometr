@@ -186,15 +186,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     //save changed farengete or celsia from menu
     private void saveChangedTypeTemperature(boolean isCheckTypeTemperature){
-        sPref = getPreferences(MODE_PRIVATE);
+        sPref = getSharedPreferences("temperature_",MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("isCheckTypeTemperature", isCheckTypeTemperature);
         ed.commit();
-    }
-
-    private boolean loadChangedTypeTemperature(){
-        sPref = getPreferences(MODE_PRIVATE);
-        return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
     //Temperature

@@ -1,7 +1,9 @@
 package com.vadim.termometr;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -16,16 +18,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.vadim.termometr.utils.Convertor;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float temper_aut;
     private AdView mAdView;
     private Switch aSwitchService;
+    private boolean isCelsia = true;
     private SharedPreferences sPref;
     private Handler handler;
     private Intent service;
@@ -57,7 +61,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         handler = new Handler();
 
         service = new Intent(this, ServiceBackgrounTemperature.class);
-        //Check sensor or commandline
+
+        //Check sensor is null if null to commandline temperature
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         }else{
@@ -75,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mAdView.loadAd(adRequest);
 
         //check on off Service
-        aSwitchService.setChecked(load());
-        if(load()){
+        aSwitchService.setChecked(loadState());
+        if(loadState()){
             startService(service);
         }else{
             stopService(service);
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     stopService(service);
                     notificationClear(1);
                 }
-                save(isChecked);
+                saveState(isChecked);
 
             }
         });
@@ -100,26 +105,53 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     //Start Handler on measure C
     private void simulateAmbientTemperature() {
-        final String[] str = new String[1];
 
         handler.post(new Runnable() {
             @Override
             public void run() {
                 temperature = getTemperatureCPU();
-                str[0] = String.format("%.0f", temperature);
-                thermometer.setCurrentTemp(temperature);
-                getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + str[0]+"C°");
+                visibleTemperature(temperature, isCelsia);
                 handler.postDelayed(this, 1000);
             }
         });
 
     }
 
+    //menu option on action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.change_display_temper, menu);
         return true;
+    }
+
+    //switch between farengete and celsia
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.celsius_menu:
+                isCelsia=true;
+                saveChangedTypeTemperature(isCelsia);
+                break;
+
+            case R.id.fahrenheit_menu:
+                isCelsia=false;
+                saveChangedTypeTemperature(isCelsia);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    //visible temperature
+    private void visibleTemperature(float temperature, boolean isCelsia){
+        float farTemper = temperature;
+        String temper = getString(R.string.app_name) + " : " + String.format("%.0f", temperature)+"C°";;
+
+        if(!isCelsia){
+            farTemper = Convertor.fahrenheit(temperature);
+            temper = getString(R.string.app_name) + " : " + String.format("%.0f", farTemper)+"F°";
+        }
+        thermometer.setCurrentTemp(farTemper);
+        getSupportActionBar().setTitle(temper);
     }
 
     //Process sensor
@@ -131,10 +163,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         temper_aut = event.values[0];
-
-        thermometer.setCurrentTemp(temper_aut);
-
-        getSupportActionBar().setTitle(getString(R.string.app_name) + " : " + temper_aut+"C°");
+        visibleTemperature(temper_aut, isCelsia);
     }
 
     @Override
@@ -142,17 +171,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-//save check
-    private void save(boolean isCheck){
+    //save check state
+    private void saveState(boolean isCheck){
         sPref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("isChecked", isCheck);
         ed.commit();
     }
 
-    private boolean load(){
+    private boolean loadState(){
         sPref = getPreferences(MODE_PRIVATE);
         return sPref.getBoolean("isChecked", true);
+    }
+
+    //save changed farengete or celsia from menu
+    private void saveChangedTypeTemperature(boolean isCheckTypeTemperature){
+        sPref = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putBoolean("isCheckTypeTemperature", isCheckTypeTemperature);
+        ed.commit();
+    }
+
+    private boolean loadChangedTypeTemperature(){
+        sPref = getPreferences(MODE_PRIVATE);
+        return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
     //Temperature

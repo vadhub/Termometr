@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/fahrenheit"
+        android:id="@+id/fahrenheit_menu"
         android:title="@string/fahrenheit"
         app:showAsAction="never">
     </item>
 
     <item
-        android:id="@+id/celsius"
+        android:id="@+id/celsius_menu"
         android:title="@string/celsius"
         app:showAsAction="never"
         />

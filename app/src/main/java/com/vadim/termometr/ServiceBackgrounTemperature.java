@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import com.vadim.termometr.utils.Convertor;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -27,12 +30,14 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
     private Handler handler;
+    private boolean isCelsia;
     private boolean isLife;
 
     public static final String CHANNEL_ID = "service";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        isCelsia = true;
         isLife = true;
         return START_NOT_STICKY;
     }
@@ -86,21 +91,19 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
 
     public void outTemper(float temperat){
 
-        String t = String.format("%.0f", temperat);
-
         Intent resultIntent = new Intent(this, MainActivity.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle(t+"°")
+                .setContentTitle(getTemperatureChanged(temperat, isCelsia))
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setTicker(t).build();
+                .setTicker(getTemperatureChanged(temperat, isCelsia)).build();
 
         startForeground(1, builder);
     }
@@ -112,6 +115,16 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
             notificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+    }
+
+    private String getTemperatureChanged(float temperature, boolean isCelasia){
+        String temper = String.format("%.0f", temperature) + "C°";
+        if(!isCelasia){
+            float fareng = Convertor.fahrenheit(temperature);
+            temper = String.format("%.0f", fareng) + "F°";
+        }
+
+        return temper;
     }
 
     @Nullable

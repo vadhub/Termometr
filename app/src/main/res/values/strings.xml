@@ -5,5 +5,7 @@
     <string name="item2" translatable="false">Stop service</string>
     <string name="start_notification">Show notification</string>
     <string name="service_stop">Service Stop</string>
+    <string name="fahrenheit">Fahrenheit (F°)</string>
+    <string name="celsius">Celsius (C°)</string>
 
 </resources>

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <com.vadim.termometr.Termometr
         android:id="@+id/thermometer"
         android:layout_width="match_parent"
@@ -48,23 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/start_notification" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <RadioButton
-            android:id="@+id/radioButtonCelsia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="C°" />
-
-        <RadioButton
-            android:id="@+id/radioButtonFarengete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="F°s" />
-    </RadioGroup>
 
 
 </RelativeLayout>

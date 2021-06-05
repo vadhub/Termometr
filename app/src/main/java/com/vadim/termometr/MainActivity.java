@@ -14,9 +14,12 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -110,6 +113,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.change_display_temper, menu);
+        return true;
     }
 
     //Process sensor

@@ -4,4 +4,6 @@
     <string name="warning">No se encontraron sensores de temperatura!</string>
     <string name="start_notification">muestra la notificación</string>
     <string name="service_stop">Servicio detenido</string>
+    <string name="celsius">Celsius</string>
+    <string name="fahrenheit">Fahrenheit</string>
 </resources>

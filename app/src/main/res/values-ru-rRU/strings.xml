@@ -4,4 +4,6 @@
     <string name="warning">Не обнаружено датчиков температуры!</string>
     <string name="start_notification">Показывать уведомление</string>
     <string name="service_stop">Служба остановлена</string>
+    <string name="fahrenheit">Фаренгейт</string>
+    <string name="celsius">Цельсий</string>
 </resources>

@@ -55,7 +55,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 @Override
                 public void run() {
                     temperature = getTemperatureCPU();
-                    outTemper(temperature);
+                    outTemper(temperature, loadChangedTypeTemperature());
 
                     handler.postDelayed(this, 1000);
                     if(!isLife){
@@ -89,14 +89,13 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         }
     }
 
-    public void outTemper(float temperat){
+    public void outTemper(float temperat, boolean typeTemper){
 
         Intent resultIntent = new Intent(this, MainActivity.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle(getTemperatureChanged(temperat, loadChangedTypeTemperature()))
+                .setContentTitle(getTemperatureChanged(temperat, typeTemper))
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
@@ -141,7 +140,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     @Override
     public void onSensorChanged(SensorEvent event) {
             temperature = event.values[0];
-            outTemper(temperature);
+            outTemper(temperature, loadChangedTypeTemperature());
     }
 
     @Override

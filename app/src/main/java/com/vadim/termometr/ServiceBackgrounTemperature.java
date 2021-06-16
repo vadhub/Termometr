@@ -14,6 +14,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -33,12 +34,14 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     private Sensor mTempSensor;
     private Handler handler;
     private boolean isLife;
+    private boolean isCelsia;
 
     public static final String CHANNEL_ID = "service";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         isLife = true;
+        isCelsia = intent.getExtras().getBoolean("typeTemperature");
         return START_NOT_STICKY;
     }
 
@@ -55,8 +58,8 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 @Override
                 public void run() {
                     temperature = getTemperatureCPU();
-                    outTemper(temperature, loadChangedTypeTemperature());
-
+                    outTemper(temperature, isCelsia);
+                    Toast.makeText(ServiceBackgrounTemperature.this, "Service "+isCelsia, Toast.LENGTH_SHORT).show();
                     handler.postDelayed(this, 1000);
                     if(!isLife){
                         handler.removeCallbacks(this);
@@ -102,7 +105,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setTicker(getTemperatureChanged(temperat, loadChangedTypeTemperature())).build();
+                .setTicker(getTemperatureChanged(temperat, typeTemper)).build();
 
         startForeground(1, builder);
     }
@@ -114,11 +117,6 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
             notificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(notificationChannel);
         }
-    }
-
-    private boolean loadChangedTypeTemperature(){
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
-        return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
     private String getTemperatureChanged(float temperature, boolean isCelsia){
@@ -140,7 +138,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     @Override
     public void onSensorChanged(SensorEvent event) {
             temperature = event.values[0];
-            outTemper(temperature, loadChangedTypeTemperature());
+            outTemper(temperature, isCelsia);
     }
 
     @Override

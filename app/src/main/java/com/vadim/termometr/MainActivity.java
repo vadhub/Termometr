@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float temper_aut;
     private AdView mAdView;
     private Switch aSwitchService;
-    private Bundle bundle;
 
     private SharedPreferences sPref;
     private Handler handler;
@@ -53,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        bundle = new Bundle();
 
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
@@ -101,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     notificationClear(1);
                 }
                 saveState(isChecked);
-
             }
         });
     }
@@ -141,10 +137,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
         }
         if(loadState()){
-            restartService(loadChangedTypeTemperature());
+            service.putExtra("typeTemperature",loadChangedTypeTemperature());
+            restartService();
         }
         return true;
     }
+
     //visible temperature
     private void visibleTemperature(float temperature, boolean isCelsia){
         float farTemper = temperature;
@@ -175,9 +173,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     //restart notification service
-    private void restartService(boolean isCelsia){
-        service = new Intent(this, ServiceBackgrounTemperature.class);
-        service.putExtra("typeTemperature",isCelsia);
+    private void restartService(){
         stopService(service);
         notificationClear(1);
         startService(service);

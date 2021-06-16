@@ -15,6 +15,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -136,9 +137,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 saveChangedTypeTemperature(false);
                 break;
         }
-
-        saveChangedTypeTemperature(loadChangedTypeTemperature());
-        Toast.makeText(this, ""+loadChangedTypeTemperature(), Toast.LENGTH_SHORT).show();
         if(loadState()){
             restartService();
         }
@@ -147,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //visible temperature
     private void visibleTemperature(float temperature, boolean isCelsia){
         float farTemper = temperature;
-        String temper = getString(R.string.app_name) + " : " + String.format("%.0f", temperature)+"C°";;
+        String temper = getString(R.string.app_name) + " : " + String.format("%.0f", temperature)+"C°";
 
         if(!isCelsia){
             farTemper = Convertor.fahrenheit(temperature);
@@ -195,14 +193,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     //save changed farengete or celsia from menu
     private void saveChangedTypeTemperature(boolean isCheckTypeTemperature){
-        sPref = getSharedPreferences("temperature_",MODE_PRIVATE);
+        sPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("isCheckTypeTemperature", isCheckTypeTemperature);
-        ed.apply();
+        ed.commit();
     }
 
     private boolean loadChangedTypeTemperature(){
-        SharedPreferences sPref = getSharedPreferences("temperature_", MODE_PRIVATE);
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
         return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 

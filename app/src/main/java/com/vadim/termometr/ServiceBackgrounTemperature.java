@@ -16,6 +16,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -104,9 +105,6 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setTicker(getTemperatureChanged(temperat, loadChangedTypeTemperature())).build();
 
-        System.out.println(loadChangedTypeTemperature());
-        Toast.makeText(this, ""+loadChangedTypeTemperature(), Toast.LENGTH_SHORT).show();
-
         startForeground(1, builder);
     }
 
@@ -120,7 +118,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     }
 
     private boolean loadChangedTypeTemperature(){
-        SharedPreferences sPref = getSharedPreferences("temperature_", MODE_PRIVATE);
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
         return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 

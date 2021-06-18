@@ -145,15 +145,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     //visible temperature
-    private void visibleTemperature(float temperature, boolean isCelsia){
+    private void visibleTemperature(float temperature, boolean isCelsius){
         float farTemper = temperature;
         String temper = getString(R.string.app_name) + " : " + String.format("%.0f", temperature)+"C°";
 
-        if(!isCelsia){
+        if(!isCelsius){
             farTemper = Convertor.fahrenheit(temperature);
             temper = getString(R.string.app_name) + " : " + String.format("%.0f", farTemper)+"F°";
         }
-        thermometer.setCurrentTemp(farTemper);
+        thermometer.setCurrentTemp(farTemper, isCelsius);
         getSupportActionBar().setTitle(temper);
     }
 

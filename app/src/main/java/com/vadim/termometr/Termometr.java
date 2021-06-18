@@ -32,7 +32,7 @@ public class Termometr extends View {
     public static final float MAX_TEMP = 100, MIN_TEMP = 0;
     private static final float RANGE_TEMP = 80;
     private static final int NB_GRADUATIONS_F = 8;
-    private static final float MAX_TEMP_F = 120, MIN_TEMP_F = -30;
+    private static final float MAX_TEMP_F = 150, MIN_TEMP_F = 30;
     private static final float RANGE_TEMP_F = 150;
     private int nbGraduations = NB_GRADUATIONS;
     private float maxTemp = MAX_TEMP;
@@ -57,7 +57,10 @@ public class Termometr extends View {
     }
 
 
-    public void setCurrentTemp(float currentTemp) {
+    public void setCurrentTemp(float currentTemp, boolean isCelsius) {
+
+        changeUnit(isCelsius);
+
         if (currentTemp > maxTemp) {
             this.currentTemp = maxTemp;
         } else if (currentTemp < minTemp) {

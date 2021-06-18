@@ -59,7 +59,6 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 public void run() {
                     temperature = getTemperatureCPU();
                     outTemper(temperature, isCelsia);
-                    Toast.makeText(ServiceBackgrounTemperature.this, "Service "+isCelsia, Toast.LENGTH_SHORT).show();
                     handler.postDelayed(this, 1000);
                     if(!isLife){
                         handler.removeCallbacks(this);

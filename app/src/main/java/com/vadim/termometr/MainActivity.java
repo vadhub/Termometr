@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         handler = new Handler();
 
         service = new Intent(this, ServiceBackgrounTemperature.class);
+        service.putExtra("typeTemperature", loadChangedTypeTemperature());
 
         //Check sensor is null if null to commandline temperature
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
@@ -136,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 saveChangedTypeTemperature(false);
                 break;
         }
+        service.putExtra("typeTemperature",loadChangedTypeTemperature());
         if(loadState()){
-            service.putExtra("typeTemperature",loadChangedTypeTemperature());
             restartService();
         }
         return true;
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
-    //Temperature
+    //Temperature from terminal
     private float getTemperatureCPU(){
         Process process;
 

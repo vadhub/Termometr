@@ -7,5 +7,7 @@
     <string name="service_stop">Service Stop</string>
     <string name="fahrenheit">Fahrenheit (F°)</string>
     <string name="celsius">Celsius (C°)</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

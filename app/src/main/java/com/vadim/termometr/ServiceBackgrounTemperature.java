@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -93,11 +94,16 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
 
     public void outTemper(float temperat, boolean typeTemper){
 
+        RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
+        termometerNotif.setTextViewText(R.id.textViewTemper, getTemperatureChanged(temperat, typeTemper));
+
+       //.setContentTitle(getTemperatureChanged(temperat, typeTemper));
+
         Intent resultIntent = new Intent(this, MainActivity.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle(getTemperatureChanged(temperat, typeTemper))
+                .setCustomContentView(termometerNotif)
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)

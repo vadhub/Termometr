@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:background="?attr/appWidgetBackgroundColor"
     android:padding="@dimen/widget_margin"
-    android:theme="@style/ThemeOverlay.Termometr.AppWidgetContainer">
+    android:theme="@style/CardView.Dark">
 
     <TextView
         android:id="@+id/appwidget_text"

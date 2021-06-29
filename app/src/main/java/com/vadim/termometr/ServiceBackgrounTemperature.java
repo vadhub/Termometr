@@ -33,13 +33,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class ServiceBackgrounTemperature extends Service implements SensorEventListener {
-    private float temperature;
-    private SensorManager mSensorManager;
-    private Sensor mTempSensor;
-    private Handler handler;
-    private boolean isLife;
-    private boolean isCelsia;
-    private RemoteViews views;
+    protected float temperature;
+    protected SensorManager mSensorManager;
+    protected Sensor mTempSensor;
+    protected Handler handler;
+    protected boolean isLife;
+    protected boolean isCelsia;
 
     public static final String CHANNEL_ID = "service";
 
@@ -55,8 +54,6 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         super.onCreate();
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         handler = new Handler();
-
-        views = new RemoteViews(getPackageName(), R.layout.temper_app_widget);
 
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
@@ -78,7 +75,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         createChannel();
     }
 
-    private float getTemperatureCPU(){
+    protected float getTemperatureCPU(){
         Process process;
 
         try {
@@ -103,7 +100,6 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
         termometerNotif.setTextViewText(R.id.textViewTemper, getTemperatureChanged(temperat, typeTemper));
 
-        updateWidget(getTemperatureChanged(temperat, typeTemper));
        //.setContentTitle(getTemperatureChanged(temperat, typeTemper));
 
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -122,7 +118,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         startForeground(1, builder);
     }
 
-    private void createChannel() {
+    protected void createChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -131,7 +127,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         }
     }
 
-    private String getTemperatureChanged(float temperature, boolean isCelsia){
+    protected String getTemperatureChanged(float temperature, boolean isCelsia){
         String temper = String.format("%.0f", temperature) + "C°";
 
         if(!isCelsia){
@@ -156,13 +152,6 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    private void updateWidget(String temperature){
-        views.setTextViewText(R.id.appwidget_text, temperature);
-        ComponentName widget = new ComponentName(this, TemperAppWidget.class);
-        AppWidgetManager manager = AppWidgetManager.getInstance(this);
-        manager.updateAppWidget(widget, views);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class TemperAppWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        Intent intentService = new Intent(context, ServiceBackgrounTemperature.class);
+        Intent intentService = new Intent(context, ServiceWidget.class);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 

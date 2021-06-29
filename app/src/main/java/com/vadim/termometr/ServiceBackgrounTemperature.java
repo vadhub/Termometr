@@ -5,6 +5,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -25,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.vadim.termometr.utils.Convertor;
+import com.vadim.termometr.widget.TemperAppWidget;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -36,6 +39,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     private Handler handler;
     private boolean isLife;
     private boolean isCelsia;
+    private RemoteViews views;
 
     public static final String CHANNEL_ID = "service";
 
@@ -51,6 +55,8 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         super.onCreate();
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         handler = new Handler();
+
+        views = new RemoteViews(getPackageName(), R.layout.temper_app_widget);
 
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
@@ -97,6 +103,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
         termometerNotif.setTextViewText(R.id.textViewTemper, getTemperatureChanged(temperat, typeTemper));
 
+        updateWidget(getTemperatureChanged(temperat, typeTemper));
        //.setContentTitle(getTemperatureChanged(temperat, typeTemper));
 
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -149,6 +156,13 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private void updateWidget(String temperature){
+        views.setTextViewText(R.id.appwidget_text, temperature);
+        ComponentName widget = new ComponentName(this, TemperAppWidget.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(this);
+        manager.updateAppWidget(widget, views);
     }
 
     @Override

@@ -23,23 +23,17 @@ public class TemperAppWidget extends AppWidgetProvider {
         Intent intentService = new Intent(context, ServiceWidget.class);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-
         if(service == null){
             service = PendingIntent.getService(context, 0, intentService, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), 30000, service);
 
-        for(int appWidgetId : appWidgetIds){
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-            Intent intent = new Intent(context, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.temper_app_widget);
-            views.setOnClickPendingIntent(R.id.layout, pendingIntent);
-
-            appWidgetManager.updateAppWidget(appWidgetId, views);
-        }
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.temper_app_widget);
+        views.setOnClickPendingIntent(R.id.layout, pendingIntent);
     }
 
 }

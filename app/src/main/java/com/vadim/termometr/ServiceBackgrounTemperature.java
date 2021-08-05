@@ -137,6 +137,15 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         return temper;
     }
 
+    protected String getTemperatureChanged(float temperature){
+
+        String temper = String.format("%.0f", temperature) + "C°";
+        float fareng = Convertor.fahrenheit(temperature);
+        temper += " " + String.format("%.0f", fareng) + "F°";
+
+        return temper;
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

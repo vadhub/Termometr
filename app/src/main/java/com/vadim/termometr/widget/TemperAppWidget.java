@@ -1,5 +1,7 @@
 package com.vadim.termometr.widget;
 
+import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -11,38 +13,42 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.vadim.termometr.MainActivity;
 import com.vadim.termometr.R;
+import com.vadim.termometr.utils.Convertor;
+import com.vadim.termometr.utils.TemperatureProcessor;
+import com.vadim.termometr.viewable.ViewableResult;
 
 
-public class TemperAppWidget extends AppWidgetProvider implements SensorEventListener {
+public class TemperAppWidget extends AppWidgetProvider implements SensorEventListener, ViewableResult {
 
     private SensorManager mySensorManager;
     private Sensor mySensorTemper;
     private Handler handler;
-
     private float temper;
+    private boolean isLife;
+    private TemperatureProcessor temperatureProcessor;
+    private RemoteViews views;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
+        isLife = true;
         mySensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         handler = new Handler();
+        temperatureProcessor = new TemperatureProcessor();
 
         if(mySensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mySensorTemper = mySensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         }else{
-
+            updateResult();
         }
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.temper_app_widget);
+        views = new RemoteViews(context.getPackageName(), R.layout.temper_app_widget);
         views.setOnClickPendingIntent(R.id.layout, pendingIntent);
-        views.setTextViewText(R.id.appwidget_text, "f");
     }
 
     @Override
@@ -55,7 +61,41 @@ public class TemperAppWidget extends AppWidgetProvider implements SensorEventLis
 
     }
 
-    private int temperatureUpdate(Handler handler){
-        return 0;
+    @Override
+    public void outTemper(float temperat, boolean typeTemper) {
+
+    }
+
+    @Override
+    public void createChannel() {
+
+    }
+
+    @Override
+    public String getTemperatureChanged(float temperature, boolean isCelsia) {
+        return String.format("%.0f", temperature) + "C°"+" "+String.format("%.0f", Convertor.fahrenheit(temperature)) + "F°";
+    }
+
+    @Override
+    public void updateResult() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                temper = temperatureProcessor.getTemperatureCPU();
+
+                views.setTextViewText(R.id.appwidget_text,getTemperatureChanged(temper, true));
+
+                handler.postDelayed(this, 1000);
+                if(!isLife){
+                    handler.removeCallbacks(this);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+        isLife = false;
     }
 }

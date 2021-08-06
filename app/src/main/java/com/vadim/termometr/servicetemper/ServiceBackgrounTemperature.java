@@ -25,10 +25,10 @@ import com.vadim.termometr.MainActivity;
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.TemperatureProcessor;
-import com.vadim.termometr.viewable.ViewaableResult;
+import com.vadim.termometr.viewable.ViewableResult;
 
 
-public class ServiceBackgrounTemperature extends Service implements SensorEventListener, ViewaableResult {
+public class ServiceBackgrounTemperature extends Service implements SensorEventListener, ViewableResult {
     protected float temperature;
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
@@ -56,21 +56,26 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         }else{
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    temperature = temperatureProcessor.getTemperatureCPU();
-                    outTemper(temperature, isCelsia);
-                    handler.postDelayed(this, 1000);
-                    if(!isLife){
-                        handler.removeCallbacks(this);
-                        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(1);
-                    }
-                }
-            });
+            updateResult();
         }
         createChannel();
+    }
+
+    @Override
+    public void updateResult(){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                temperature = temperatureProcessor.getTemperatureCPU();
+                outTemper(temperature, isCelsia);
+                handler.postDelayed(this, 1000);
+                if(!isLife){
+                    handler.removeCallbacks(this);
+                    NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(1);
+                }
+            }
+        });
     }
 
     @Override

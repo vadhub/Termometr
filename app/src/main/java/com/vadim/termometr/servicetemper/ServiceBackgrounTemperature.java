@@ -1,4 +1,4 @@
-package com.vadim.termometr;
+package com.vadim.termometr.servicetemper;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -21,13 +21,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.vadim.termometr.MainActivity;
+import com.vadim.termometr.R;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.TemperatureProcessor;
+import com.vadim.termometr.viewable.ViewaableResult;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
-public class ServiceBackgrounTemperature extends Service implements SensorEventListener {
+public class ServiceBackgrounTemperature extends Service implements SensorEventListener, ViewaableResult {
     protected float temperature;
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
@@ -72,10 +73,11 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         createChannel();
     }
 
+    @Override
     public void outTemper(float temperat, boolean typeTemper){
 
         RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
-        termometerNotif.setTextViewText(R.id.textViewTemper, temperatureProcessor.getTemperatureChanged(temperat, typeTemper));
+        termometerNotif.setTextViewText(R.id.textViewTemper, getTemperatureChanged(temperat, typeTemper));
 
        //.setContentTitle(getTemperatureChanged(temperat, typeTemper));
 
@@ -90,18 +92,30 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setTicker(temperatureProcessor.getTemperatureChanged(temperat, typeTemper)).build();
+                .setTicker(getTemperatureChanged(temperat, typeTemper)).build();
 
         startForeground(1, builder);
     }
 
-    protected void createChannel() {
+    @Override
+    public void createChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+    }
+
+    @Override
+    public String getTemperatureChanged(float temperature, boolean isCelsia) {
+        String temper = String.format("%.0f", temperature) + "C°";
+
+        if(!isCelsia){
+            float fareng = Convertor.fahrenheit(temperature);
+            temper = String.format("%.0f", fareng) + "F°";
+        }
+        return temper;
     }
 
     @Nullable

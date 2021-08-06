@@ -24,14 +24,4 @@ public class TemperatureProcessor {
             return 0.0f;
         }
     }
-
-    public String getTemperatureChanged(float temperature, boolean isCelsia){
-        String temper = String.format("%.0f", temperature) + "C°";
-
-        if(!isCelsia){
-            float fareng = Convertor.fahrenheit(temperature);
-            temper = String.format("%.0f", fareng) + "F°";
-        }
-        return temper;
-    }
 }

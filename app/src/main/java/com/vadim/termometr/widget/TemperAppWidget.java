@@ -56,6 +56,6 @@ public class TemperAppWidget extends AppWidgetProvider implements SensorEventLis
     }
 
     private int temperatureUpdate(Handler handler){
-        handler =
+        return 0;
     }
 }

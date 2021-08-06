@@ -54,4 +54,8 @@ public class TemperAppWidget extends AppWidgetProvider implements SensorEventLis
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
+
+    private int temperatureUpdate(Handler handler){
+        handler =
+    }
 }

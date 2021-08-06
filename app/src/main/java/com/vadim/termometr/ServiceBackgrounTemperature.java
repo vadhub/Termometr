@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.vadim.termometr.utils.Convertor;
+import com.vadim.termometr.utils.TemperatureProcessor;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -33,6 +34,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
     protected Handler handler;
     protected boolean isLife;
     protected boolean isCelsia;
+    private TemperatureProcessor temperatureProcessor;
 
     public static final String CHANNEL_ID = "service";
 
@@ -48,6 +50,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         super.onCreate();
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         handler = new Handler();
+        temperatureProcessor = new TemperatureProcessor();
 
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
@@ -55,7 +58,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    temperature = getTemperatureCPU();
+                    temperature = temperatureProcessor.getTemperatureCPU();
                     outTemper(temperature, isCelsia);
                     handler.postDelayed(this, 1000);
                     if(!isLife){
@@ -69,30 +72,10 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         createChannel();
     }
 
-    protected float getTemperatureCPU(){
-        Process process;
-
-        try {
-            process = Runtime.getRuntime().exec("cat sys/devices/virtual/thermal/thermal_zone0/temp");
-            process.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = reader.readLine();
-            if(line!=null) {
-                float temp = Float.parseFloat(line);
-                return temp / 1000.0f;
-            }else{
-                return 30.0f;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0.0f;
-        }
-    }
-
     public void outTemper(float temperat, boolean typeTemper){
 
         RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
-        termometerNotif.setTextViewText(R.id.textViewTemper, getTemperatureChanged(temperat, typeTemper));
+        termometerNotif.setTextViewText(R.id.textViewTemper, temperatureProcessor.getTemperatureChanged(temperat, typeTemper));
 
        //.setContentTitle(getTemperatureChanged(temperat, typeTemper));
 
@@ -107,7 +90,7 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setTicker(getTemperatureChanged(temperat, typeTemper)).build();
+                .setTicker(temperatureProcessor.getTemperatureChanged(temperat, typeTemper)).build();
 
         startForeground(1, builder);
     }
@@ -119,25 +102,6 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
             notificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(notificationChannel);
         }
-    }
-
-    protected String getTemperatureChanged(float temperature, boolean isCelsia){
-        String temper = String.format("%.0f", temperature) + "C°";
-
-        if(!isCelsia){
-            float fareng = Convertor.fahrenheit(temperature);
-            temper = String.format("%.0f", fareng) + "F°";
-        }
-        return temper;
-    }
-
-    protected String getTemperatureChanged(float temperature){
-
-        String temper = String.format("%.0f", temperature) + "C°";
-        float fareng = Convertor.fahrenheit(temperature);
-        temper += " " + String.format("%.0f", fareng) + "F°";
-
-        return temper;
     }
 
     @Nullable

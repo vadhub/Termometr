@@ -21,7 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.vadim.termometr.MainActivity;
+import com.vadim.termometr.screens.main.MainActivity;
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.TemperatureProcessor;

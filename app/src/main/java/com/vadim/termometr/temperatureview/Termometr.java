@@ -1,7 +1,5 @@
-package com.vadim.termometr;
+package com.vadim.termometr.temperatureview;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -14,7 +12,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import androidx.core.app.NotificationCompat;
+import com.vadim.termometr.R;
 
 public class Termometr extends View {
 

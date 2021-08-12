@@ -1,4 +1,4 @@
-package com.vadim.termometr;
+package com.vadim.termometr.screens.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,25 +28,24 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.vadim.termometr.R;
 import com.vadim.termometr.servicetemper.ServiceBackgrounTemperature;
+import com.vadim.termometr.temperatureview.Termometr;
 import com.vadim.termometr.utils.Convertor;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, TemperatureView {
 
     private Termometr thermometer;
-    private float temperature;
-
-    private SensorManager mSensorManager;
-    private  Sensor mTempSensor;
-    private float temper_aut;
     private AdView mAdView;
     private Switch aSwitchService;
 
+    private TemperPresentor presentor;
+    private SensorManager mSensorManager;
+    private Sensor mTempSensor;
     private SharedPreferences sPref;
-    private Handler handler;
     private Intent service;
 
     @Override
@@ -54,12 +53,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        presentor = new TemperPresentor(this);
+
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        handler = new Handler();
 
         service = new Intent(this, ServiceBackgrounTemperature.class);
         service.putExtra("typeTemperature", loadChangedTypeTemperature());
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         }else{
-            simulateAmbientTemperature();
+            presentor.setTemperature();
         }
 
         //AdMob
@@ -104,20 +102,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-    //Start Handler on measure temperature
-    private void simulateAmbientTemperature() {
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                temperature = getTemperatureCPU();
-                visibleTemperature(temperature, loadChangedTypeTemperature());
-                handler.postDelayed(this, 1000);
-            }
-        });
-
-    }
-
     //menu option on action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -145,19 +129,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return true;
     }
 
-    //visible temperature
-    private void visibleTemperature(float temperature, boolean isCelsius){
-        float farTemper = temperature;
-        String temper = getString(R.string.app_name) + " : " + String.format("%.0f", temperature)+"C°";
-
-        if(!isCelsius){
-            farTemper = Convertor.fahrenheit(temperature);
-            temper = getString(R.string.app_name) + " : " + String.format("%.0f", farTemper)+"F°";
-        }
-        thermometer.setCurrentTemp(farTemper, isCelsius);
-        getSupportActionBar().setTitle(temper);
-    }
-
     //Process sensor
     protected void onResume() {
         super.onResume();
@@ -166,8 +137,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        temper_aut = event.values[0];
-        visibleTemperature(temper_aut, loadChangedTypeTemperature());
+
     }
 
     @Override
@@ -207,31 +177,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
-    //Temperature from terminal
-    private float getTemperatureCPU(){
-        Process process;
-
-        try {
-            process = Runtime.getRuntime().exec("cat sys/devices/virtual/thermal/thermal_zone0/temp");
-            process.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = reader.readLine();
-            if(line!=null) {
-                float temp = Float.parseFloat(line);
-                return temp / 1000.0f;
-            }else{
-                Toast.makeText(this, R.string.warning, Toast.LENGTH_SHORT).show();
-                return 30.0f;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0.0f;
-        }
-    }
-
     private void notificationClear(int NOTIFICATION_ID){
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
+    @Override
+    public void getTemperatureGPU(float t) {
+        thermometer.setCurrentTemp(t, loadChangedTypeTemperature());
+    }
+
+    @Override
+    public void showError(int str) {
+        Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
+    }
 }

@@ -27,7 +27,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5356301729869498~7102025396" />
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".screens.main.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

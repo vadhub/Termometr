@@ -7,7 +7,6 @@ public class TemperatureProcessor {
 
     public float getTemperatureCPU(){
         Process process;
-
         try {
             process = Runtime.getRuntime().exec("cat sys/devices/virtual/thermal/thermal_zone0/temp");
             process.waitFor();
@@ -17,7 +16,7 @@ public class TemperatureProcessor {
                 float temp = Float.parseFloat(line);
                 return temp / 1000.0f;
             }else{
-                return 30.0f;
+                return -100;
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,7 +1,5 @@
 package com.vadim.termometr.widget;
 
-import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -14,7 +12,7 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.widget.RemoteViews;
 
-import com.vadim.termometr.MainActivity;
+import com.vadim.termometr.screens.main.MainActivity;
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.TemperatureProcessor;
@@ -54,6 +52,7 @@ public class TemperAppWidget extends AppWidgetProvider implements SensorEventLis
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         temper = sensorEvent.values[0];
+        outTemper(temper, true);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class TemperAppWidget extends AppWidgetProvider implements SensorEventLis
 
     @Override
     public void outTemper(float temperat, boolean typeTemper) {
-
+        views.setTextViewText(R.id.appwidget_text,getTemperatureChanged(temper, true));
     }
 
     @Override
@@ -83,7 +82,7 @@ public class TemperAppWidget extends AppWidgetProvider implements SensorEventLis
             public void run() {
                 temper = temperatureProcessor.getTemperatureCPU();
 
-                views.setTextViewText(R.id.appwidget_text,getTemperatureChanged(temper, true));
+                outTemper(temper, true);
 
                 handler.postDelayed(this, 1000);
                 if(!isLife){

@@ -1,4 +1,4 @@
-package com.vadim.termometr;
+package com.vadim.termometr.servicetemper;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,34 +8,34 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.vadim.termometr.screens.main.MainActivity;
+import com.vadim.termometr.R;
 import com.vadim.termometr.utils.Convertor;
+import com.vadim.termometr.utils.TemperatureProcessor;
+import com.vadim.termometr.viewable.ViewableResult;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
-public class ServiceBackgrounTemperature extends Service implements SensorEventListener {
-    private float temperature;
-    private SensorManager mSensorManager;
-    private Sensor mTempSensor;
-    private Handler handler;
-    private boolean isLife;
-    private boolean isCelsia;
+public class ServiceBackgrounTemperature extends Service implements SensorEventListener, ViewableResult {
+    protected float temperature;
+    protected SensorManager mSensorManager;
+    protected Sensor mTempSensor;
+    protected Handler handler;
+    protected boolean isLife;
+    protected boolean isCelsia;
+    private TemperatureProcessor temperatureProcessor;
 
     public static final String CHANNEL_ID = "service";
 
@@ -51,47 +51,34 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         super.onCreate();
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         handler = new Handler();
+        temperatureProcessor = new TemperatureProcessor();
 
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         }else{
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    temperature = getTemperatureCPU();
-                    outTemper(temperature, isCelsia);
-                    handler.postDelayed(this, 1000);
-                    if(!isLife){
-                        handler.removeCallbacks(this);
-                        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(1);
-                    }
-                }
-            });
+            updateResult();
         }
         createChannel();
     }
 
-    private float getTemperatureCPU(){
-        Process process;
-
-        try {
-            process = Runtime.getRuntime().exec("cat sys/devices/virtual/thermal/thermal_zone0/temp");
-            process.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = reader.readLine();
-            if(line!=null) {
-                float temp = Float.parseFloat(line);
-                return temp / 1000.0f;
-            }else{
-                return 30.0f;
+    @Override
+    public void updateResult(){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                temperature = temperatureProcessor.getTemperatureCPU();
+                outTemper(temperature, isCelsia);
+                handler.postDelayed(this, 1000);
+                if(!isLife){
+                    handler.removeCallbacks(this);
+                    NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(1);
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0.0f;
-        }
+        });
     }
 
+    @Override
     public void outTemper(float temperat, boolean typeTemper){
 
         RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
@@ -115,7 +102,8 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         startForeground(1, builder);
     }
 
-    private void createChannel() {
+    @Override
+    public void createChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -124,7 +112,8 @@ public class ServiceBackgrounTemperature extends Service implements SensorEventL
         }
     }
 
-    private String getTemperatureChanged(float temperature, boolean isCelsia){
+    @Override
+    public String getTemperatureChanged(float temperature, boolean isCelsia) {
         String temper = String.format("%.0f", temperature) + "C°";
 
         if(!isCelsia){

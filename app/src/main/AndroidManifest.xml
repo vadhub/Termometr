@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vadim.termometr">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +18,8 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5356301729869498~7102025396" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".screens.main.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +28,7 @@
         </activity>
 
         <service
-            android:name=".ServiceBackgrounTemperature"
+            android:name=".servicetemper.ServiceBackgrounTemperature"
             android:enabled="true"
             android:exported="true"
             android:label="serviceRegistTemper"

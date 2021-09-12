@@ -15,6 +15,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -137,7 +138,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
+        thermometer.setCurrentTemp(event.values[0], loadChangedTypeTemperature());
+        getActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], loadChangedTypeTemperature()));
     }
 
     @Override
@@ -185,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void getTemperatureGPU(float t) {
         thermometer.setCurrentTemp(t, loadChangedTypeTemperature());
+        getActionBar().setTitle(Convertor.temperatureConvertor(t, loadChangedTypeTemperature()));
     }
 
     @Override

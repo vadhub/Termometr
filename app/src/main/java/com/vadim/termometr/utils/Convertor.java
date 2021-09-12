@@ -1,6 +1,5 @@
 package com.vadim.termometr.utils;
 
-import com.vadim.termometr.R;
 
 public class Convertor {
     public static float fahrenheit(float temperCelsia){
@@ -8,7 +7,7 @@ public class Convertor {
         return far;
     }
 
-    public String temperatureConvertor(float temperature, boolean isCelsius){
+    public static String temperatureConvertor(float temperature, boolean isCelsius){
         float farTemper;
         String temper = String.format("%.0f", temperature)+"C°";
 

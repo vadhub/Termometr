@@ -1,7 +1,7 @@
 package com.vadim.termometr.screens.main;
 
 import com.vadim.termometr.R;
-import com.vadim.termometr.utils.TemperatureProcessor;
+import com.vadim.termometr.utils.temperprocessor.TemperatureProcessor;
 
 public class TemperPresentor {
 

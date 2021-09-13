@@ -1,4 +1,4 @@
-package com.vadim.termometr.utils;
+package com.vadim.termometr.utils.temperprocessor;
 
 public class TemperaturePaths {
     //all path that to get temperature from different device

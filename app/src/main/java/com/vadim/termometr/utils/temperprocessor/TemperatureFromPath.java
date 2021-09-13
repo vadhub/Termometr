@@ -8,26 +8,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TemperatureFromPath {
-    private String fileTemper = "";
 
     public String getFileTemper() {
         return parsingListPaths(getTemperaturePaths());
     }
 
-    public void setFileTemper(String fileTemper) {
-        this.fileTemper = fileTemper;
+    private static TemperatureFromPath temperatureProcessor;
+
+    private TemperatureFromPath() {
     }
 
-    private static TemperatureFromPath temperatureProcessor;
-    private final static Object LOCK = new Object();
-
-    private TemperatureFromPath(){
-        synchronized (LOCK){
+    public static TemperatureFromPath getInstance() {
+        if (temperatureProcessor==null) {
             temperatureProcessor = new TemperatureFromPath();
         }
-    }
-
-    public static TemperatureFromPath getInstance(){
         return temperatureProcessor;
     }
 

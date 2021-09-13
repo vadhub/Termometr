@@ -18,6 +18,19 @@ public class TemperatureFromPath {
         this.fileTemper = fileTemper;
     }
 
+    private static TemperatureFromPath temperatureProcessor;
+    private final static Object LOCK = new Object();
+
+    private TemperatureFromPath(){
+        synchronized (LOCK){
+            temperatureProcessor = new TemperatureFromPath();
+        }
+    }
+
+    public static TemperatureFromPath getInstance(){
+        return temperatureProcessor;
+    }
+
     private String cat(String file) {
         BufferedReader reader = null;
         StringBuilder result = new StringBuilder();

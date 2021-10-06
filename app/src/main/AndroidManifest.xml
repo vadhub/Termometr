@@ -28,7 +28,7 @@
         </activity>
 
         <service
-            android:name=".servicetemper.ServiceBackgrounTemperature"
+            android:name=".servicetemper.ServiceBackgroundTemperature"
             android:enabled="true"
             android:exported="true"
             android:label="serviceRegistTemper"

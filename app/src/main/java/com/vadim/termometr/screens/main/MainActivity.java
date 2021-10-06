@@ -3,6 +3,7 @@ package com.vadim.termometr.screens.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -12,10 +13,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,13 +30,11 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.vadim.termometr.R;
-import com.vadim.termometr.servicetemper.ServiceBackgrounTemperature;
+import com.vadim.termometr.servicetemper.ServiceBackgroundTemperature;
 import com.vadim.termometr.temperatureview.Termometr;
 import com.vadim.termometr.utils.Convertor;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
+@TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class MainActivity extends AppCompatActivity implements SensorEventListener, TemperatureView {
 
     private Termometr thermometer;
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
 
-        service = new Intent(this, ServiceBackgrounTemperature.class);
+        service = new Intent(this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", loadChangedTypeTemperature());
 
         //Check sensor is null if null to commandline temperature

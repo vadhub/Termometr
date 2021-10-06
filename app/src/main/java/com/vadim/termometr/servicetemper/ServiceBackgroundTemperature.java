@@ -28,7 +28,7 @@ import com.vadim.termometr.utils.temperprocessor.TemperatureProcessor;
 import com.vadim.termometr.viewable.ViewableResult;
 
 
-public class ServiceBackgrounTemperature extends Service implements SensorEventListener, ViewableResult {
+public class ServiceBackgroundTemperature extends Service implements SensorEventListener, ViewableResult {
     protected float temperature;
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;

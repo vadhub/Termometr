@@ -13,10 +13,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -137,8 +139,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         thermometer.setCurrentTemp(event.values[0], loadChangedTypeTemperature());
-        getSupportActionBar().setTitle(event.values[0]+" "+loadChangedTypeTemperature());
-        //getActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], loadChangedTypeTemperature()));
+        Log.i("temper", event.values[0]+"");
+        getSupportActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], loadChangedTypeTemperature()));
     }
 
     @Override
@@ -146,39 +148,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     //restart notification service
-    private void restartService(){
+    private void restartService() {
         stopService(service);
         notificationClear(1);
         startService(service);
     }
 
     //save check state
-    private void saveState(boolean isCheck){
+    private void saveState(boolean isCheck) {
         sPref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("isChecked", isCheck);
         ed.commit();
     }
 
-    private boolean loadState(){
+    private boolean loadState() {
         sPref = getPreferences(MODE_PRIVATE);
         return sPref.getBoolean("isChecked", true);
     }
 
     //save changed farengete or celsia from menu
-    private void saveChangedTypeTemperature(boolean isCheckTypeTemperature){
+    private void saveChangedTypeTemperature(boolean isCheckTypeTemperature) {
         sPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean("isCheckTypeTemperature", isCheckTypeTemperature);
         ed.commit();
     }
 
-    private boolean loadChangedTypeTemperature(){
+    private boolean loadChangedTypeTemperature() {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
         return sPref.getBoolean("isCheckTypeTemperature", true);
     }
 
-    private void notificationClear(int NOTIFICATION_ID){
+    private void notificationClear(int NOTIFICATION_ID) {
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
     }
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void getTemperatureGPU(float t) {
         thermometer.setCurrentTemp(t, loadChangedTypeTemperature());
-        getActionBar().setTitle(Convertor.temperatureConvertor(t, loadChangedTypeTemperature()));
+        getSupportActionBar().setTitle(Convertor.temperatureConvertor(t, loadChangedTypeTemperature()));
     }
 
     @Override

@@ -43,6 +43,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public int onStartCommand(Intent intent, int flags, int startId) {
         isLife = true;
         isCelsia = intent.getExtras().getBoolean("typeTemperature");
+        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
         return START_NOT_STICKY;
     }
 

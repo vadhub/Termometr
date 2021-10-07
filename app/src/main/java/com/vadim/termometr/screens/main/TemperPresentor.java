@@ -12,14 +12,14 @@ public class TemperPresentor {
         this.view=view;
     }
 
-    public void setTemperature(){
+    public void setTemperature() {
         float t = temperatureProcessor.getTemperatureCPU();
-        if(t==-100){
+        System.out.println(t);
+        if (t==-100) {
             view.showError(R.string.warning);
         }
         view.getTemperatureGPU(t);
 
     }
-
 
 }

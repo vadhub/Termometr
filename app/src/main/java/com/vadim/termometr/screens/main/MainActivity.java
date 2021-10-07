@@ -137,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         thermometer.setCurrentTemp(event.values[0], loadChangedTypeTemperature());
-        getActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], loadChangedTypeTemperature()));
+        getSupportActionBar().setTitle(event.values[0]+" "+loadChangedTypeTemperature());
+        //getActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], loadChangedTypeTemperature()));
     }
 
     @Override

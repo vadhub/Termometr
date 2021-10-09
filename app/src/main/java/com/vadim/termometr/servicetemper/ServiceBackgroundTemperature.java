@@ -24,7 +24,7 @@ import androidx.core.app.NotificationCompat;
 import com.vadim.termometr.screens.main.MainActivity;
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.Convertor;
-import com.vadim.termometr.utils.temperprocessor.TemperatureProcessor;
+import com.vadim.termometr.temperprocessor.TemperatureProcessor;
 import com.vadim.termometr.viewable.ViewableResult;
 
 

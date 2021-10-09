@@ -1,4 +1,4 @@
-package com.vadim.termometr.utils.temperprocessor;
+package com.vadim.termometr.temperprocessor;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

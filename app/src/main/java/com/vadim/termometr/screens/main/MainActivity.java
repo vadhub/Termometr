@@ -35,6 +35,7 @@ import com.vadim.termometr.R;
 import com.vadim.termometr.servicetemper.ServiceBackgroundTemperature;
 import com.vadim.termometr.temperatureview.Termometr;
 import com.vadim.termometr.utils.Convertor;
+import com.vadim.termometr.utils.SaveData;
 
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class MainActivity extends AppCompatActivity implements SensorEventListener, TemperatureView {
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TemperPresentor presentor;
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
-    private SharedPreferences sPref;
     private Intent service;
+    private SaveData saveData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +56,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         presentor = new TemperPresentor(this);
+        saveData = new SaveData(this);
 
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
 
         service = new Intent(this, ServiceBackgroundTemperature.class);
-        service.putExtra("typeTemperature", loadChangedTypeTemperature());
+        service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
 
         //Check sensor is null if null to commandline temperature
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
@@ -81,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mAdView.loadAd(adRequest);
 
         //check on off Service
-        aSwitchService.setChecked(loadState());
-        if(loadState()){
+        aSwitchService.setChecked(saveData.loadState());
+        if(saveData.loadState()){
             startService(service);
         }else{
             stopService(service);
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     stopService(service);
                     notificationClear(1);
                 }
-                saveState(isChecked);
+                saveData.saveState(isChecked);
             }
         });
     }
@@ -116,15 +118,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.celsius_menu:
-                saveChangedTypeTemperature(true);
+                saveData.saveChangedTypeTemperature(true);
                 break;
 
             case R.id.fahrenheit_menu:
-                saveChangedTypeTemperature(false);
+                saveData.saveChangedTypeTemperature(false);
                 break;
         }
-        service.putExtra("typeTemperature",loadChangedTypeTemperature());
-        if(loadState()){
+        service.putExtra("typeTemperature",saveData.loadChangedTypeTemperature());
+        if(saveData.loadState()){
             restartService();
         }
         return true;
@@ -138,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        thermometer.setCurrentTemp(event.values[0], loadChangedTypeTemperature());
+        thermometer.setCurrentTemp(event.values[0], saveData.loadChangedTypeTemperature());
         Log.i("temper", event.values[0]+"");
-        getSupportActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], loadChangedTypeTemperature()));
+        getSupportActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], saveData.loadChangedTypeTemperature()));
     }
 
     @Override
@@ -154,32 +156,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startService(service);
     }
 
-    //save check state
-    private void saveState(boolean isCheck) {
-        sPref = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putBoolean("isChecked", isCheck);
-        ed.commit();
-    }
-
-    private boolean loadState() {
-        sPref = getPreferences(MODE_PRIVATE);
-        return sPref.getBoolean("isChecked", true);
-    }
-
-    //save changed farengete or celsia from menu
-    private void saveChangedTypeTemperature(boolean isCheckTypeTemperature) {
-        sPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putBoolean("isCheckTypeTemperature", isCheckTypeTemperature);
-        ed.commit();
-    }
-
-    private boolean loadChangedTypeTemperature() {
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
-        return sPref.getBoolean("isCheckTypeTemperature", true);
-    }
-
     private void notificationClear(int NOTIFICATION_ID) {
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
@@ -187,8 +163,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void getTemperatureGPU(float t) {
-        thermometer.setCurrentTemp(t, loadChangedTypeTemperature());
-        getSupportActionBar().setTitle(Convertor.temperatureConvertor(t, loadChangedTypeTemperature()));
+        thermometer.setCurrentTemp(t, saveData.loadChangedTypeTemperature());
+        getSupportActionBar().setTitle(Convertor.temperatureConvertor(t, saveData.loadChangedTypeTemperature()));
     }
 
     @Override

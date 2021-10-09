@@ -25,6 +25,7 @@ import com.vadim.termometr.screens.main.MainActivity;
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.temperprocessor.TemperatureProcessor;
+import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.viewable.ViewableResult;
 
 
@@ -36,8 +37,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     protected boolean isLife;
     protected boolean isCelsia;
     private TemperatureProcessor temperatureProcessor;
-
-    public static final String CHANNEL_ID = "service";
+    private NotificationHelper notificationHelper;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -53,13 +53,13 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         handler = new Handler();
         temperatureProcessor = new TemperatureProcessor();
-
+        notificationHelper = new NotificationHelper();
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         }else{
             updateResult();
         }
-        createChannel();
+
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
             @Override
             public void run() {
                 temperature = temperatureProcessor.getTemperatureCPU();
-                outTemper(temperature, isCelsia);
+                startForeground(1, notificationHelper.viewNotification(temperature, isCelsia));
                 handler.postDelayed(this, 1000);
                 if(!isLife){
                     handler.removeCallbacks(this);
@@ -78,52 +78,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
             }
         });
     }
-
-    @Override
-    public void outTemper(float temperat, boolean typeTemper){
-
-        RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
-        termometerNotif.setTextViewText(R.id.textViewTemper, getTemperatureChanged(temperat, typeTemper));
-
-       //.setContentTitle(getTemperatureChanged(temperat, typeTemper));
-
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_stat_name)
-                .setCustomContentView(termometerNotif)
-                .setOngoing(true)
-                .setAutoCancel(false)
-                .setContentIntent(resultPendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setTicker(getTemperatureChanged(temperat, typeTemper)).build();
-
-        startForeground(1, builder);
-    }
-
-    @Override
-    public void createChannel() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationChannel.setSound(null, null);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-    }
-
-    @Override
-    public String getTemperatureChanged(float temperature, boolean isCelsia) {
-        String temper = String.format("%.0f", temperature) + "C°";
-
-        if(!isCelsia){
-            float fareng = Convertor.fahrenheit(temperature);
-            temper = String.format("%.0f", fareng) + "F°";
-        }
-        return temper;
-    }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -133,7 +87,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onSensorChanged(SensorEvent event) {
             temperature = event.values[0];
-            outTemper(temperature, isCelsia);
+            startForeground(1, notificationHelper.viewNotification(temperature, isCelsia));
     }
 
     @Override
@@ -144,7 +98,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         String resource = getResources().getString(R.string.service_stop);
         Toast.makeText(getApplicationContext(), resource, Toast.LENGTH_SHORT).show();
         isLife =false;

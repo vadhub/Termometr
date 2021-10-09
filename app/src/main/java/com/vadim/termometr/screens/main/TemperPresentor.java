@@ -19,7 +19,6 @@ public class TemperPresentor {
             view.showError(R.string.warning);
         }
         view.getTemperatureGPU(t);
-
     }
 
 }

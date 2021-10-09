@@ -35,6 +35,7 @@ import com.vadim.termometr.R;
 import com.vadim.termometr.servicetemper.ServiceBackgroundTemperature;
 import com.vadim.termometr.temperatureview.Termometr;
 import com.vadim.termometr.utils.Convertor;
+import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.utils.SaveData;
 
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
@@ -43,8 +44,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Termometr thermometer;
     private AdView mAdView;
     private Switch aSwitchService;
-
-    private TemperPresentor presentor;
+    private TemperPresentor presenter;
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
     private Intent service;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presentor = new TemperPresentor(this);
+        presenter = new TemperPresentor(this);
         saveData = new SaveData(this);
 
         aSwitchService = (Switch) findViewById(R.id.switchService);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         }else{
-            presentor.setTemperature();
+            presenter.setTemperature();
         }
 
         //AdMob
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     startService(service);
                 }else{
                     stopService(service);
-                    notificationClear(1);
+                    NotificationHelper.notificationClear(1, MainActivity.this);
                 }
                 saveData.saveState(isChecked);
             }
@@ -152,13 +152,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //restart notification service
     private void restartService() {
         stopService(service);
-        notificationClear(1);
+        NotificationHelper.notificationClear(1, this);
         startService(service);
-    }
-
-    private void notificationClear(int NOTIFICATION_ID) {
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
     }
 
     @Override

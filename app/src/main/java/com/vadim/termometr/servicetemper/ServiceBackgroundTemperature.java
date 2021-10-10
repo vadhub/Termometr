@@ -1,29 +1,19 @@
 package com.vadim.termometr.servicetemper;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.widget.RemoteViews;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-
-import com.vadim.termometr.screens.main.MainActivity;
 import com.vadim.termometr.R;
-import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.temperprocessor.TemperatureProcessor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.viewable.ViewableResult;
@@ -86,8 +76,8 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-            temperature = event.values[0];
-            startForeground(1, notificationHelper.viewNotification(temperature, isCelsia));
+        temperature = event.values[0];
+        startForeground(1, notificationHelper.viewNotification(temperature, isCelsia));
     }
 
     @Override

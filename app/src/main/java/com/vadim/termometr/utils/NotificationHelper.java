@@ -31,23 +31,30 @@ public class NotificationHelper extends Application {
     }
 
     public void createChannel() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "channel", NotificationManager.IMPORTANCE_DEFAULT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }
 
-    public Notification viewNotification(float temper, boolean typeTemper){
+    public Notification viewNotification(float temper, boolean typeTemper) {
 
         RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
         termometerNotif.setTextViewText(R.id.textViewTemper, Convertor.temperatureConvertor(temper, typeTemper));
 
-        //.setContentTitle(getTemperatureChanged(temperat, typeTemper));
-
         Intent resultIntent = new Intent(this, MainActivity.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
         Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setCustomContentView(termometerNotif)

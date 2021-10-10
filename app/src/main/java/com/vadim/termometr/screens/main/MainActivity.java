@@ -61,15 +61,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
         service = new Intent(this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
 
         //Check sensor is null if null to commandline temperature
-        if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
-            mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        }else{
+        if (mTempSensor==null) {
             presenter.setTemperature();
+            Log.i("presenter", "ok");
         }
 
         //AdMob
@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //check on off Service
         aSwitchService.setChecked(saveData.loadState());
-        if(saveData.loadState()){
+        if (saveData.loadState()) {
             startService(service);
-        }else{
+        } else {
             stopService(service);
         }
 
@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aSwitchService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     startService(service);
-                }else{
+                } else {
                     stopService(service);
                     NotificationHelper.notificationClear(1, MainActivity.this);
                 }
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //switch between farengete and celsia
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.celsius_menu:
                 saveData.saveChangedTypeTemperature(true);
                 break;
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
         }
         service.putExtra("typeTemperature",saveData.loadChangedTypeTemperature());
-        if(saveData.loadState()){
+        if (saveData.loadState()) {
             restartService();
         }
         return true;
@@ -135,7 +135,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //Process sensor
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (mTempSensor!=null) {
+            mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @Override
@@ -159,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void getTemperatureGPU(float t) {
         thermometer.setCurrentTemp(t, saveData.loadChangedTypeTemperature());
+        Log.i("cpu", t+"");
         getSupportActionBar().setTitle(Convertor.temperatureConvertor(t, saveData.loadChangedTypeTemperature()));
     }
 

@@ -44,16 +44,15 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         handler = new Handler();
         temperatureProcessor = new TemperatureProcessor();
         notificationHelper = new NotificationHelper();
-        if(mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null){
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null) {
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        }else{
+        } else {
             updateResult();
         }
-
     }
 
     @Override
-    public void updateResult(){
+    public void updateResult() {
         handler.post(new Runnable() {
             @Override
             public void run() {

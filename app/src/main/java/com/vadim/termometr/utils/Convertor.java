@@ -1,6 +1,5 @@
 package com.vadim.termometr.utils;
 
-
 public class Convertor {
     public static float fahrenheit(float temperCelsia) {
         float far = (temperCelsia*9/5)+32;
@@ -17,5 +16,19 @@ public class Convertor {
         }
 
         return temper;
+    }
+
+    public static float temperatureHuman(String line) {
+        try {
+            if (line!=null) {
+                float temp = Float.parseFloat(line);
+                return temp / 1000.0f;
+            } else {
+                return -100;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0.0f;
+        }
     }
 }

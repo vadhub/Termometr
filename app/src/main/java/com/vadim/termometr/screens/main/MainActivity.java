@@ -3,12 +3,14 @@ package com.vadim.termometr.screens.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -34,6 +36,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.vadim.termometr.R;
 import com.vadim.termometr.servicetemper.ServiceBackgroundTemperature;
 import com.vadim.termometr.temperatureview.Termometr;
+import com.vadim.termometr.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.utils.SaveData;
@@ -49,15 +52,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mTempSensor;
     private Intent service;
     private SaveData saveData;
+    private static final int READ_REQUEST = 1123445;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == READ_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        presenter = new TemperPresentor(this);
+        //presenter = new TemperPresentor(this);
         saveData = new SaveData(this);
-
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -68,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //Check sensor is null if null to commandline temperature
         if (mTempSensor==null) {
-            presenter.setTemperature();
+            //presenter.setTemperature();
+            requestPermissions();
             Log.i("presenter", "ok");
         }
 
@@ -103,6 +114,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 saveData.saveState(isChecked);
             }
         });
+    }
+
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_REQUEST);
+        } else {
+
+        }
     }
 
     //menu option on action bar

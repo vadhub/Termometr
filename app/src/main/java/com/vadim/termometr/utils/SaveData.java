@@ -38,4 +38,17 @@ public class SaveData {
         sPref = context.getSharedPreferences("save_change_type", MODE_PRIVATE);
         return sPref.getBoolean("isCheckTypeTemperature", true);
     }
+
+    public void savePathTemperature(String path) {
+        sPref = context.getSharedPreferences("temper", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString("path_temper", path);
+        ed.apply();
+    }
+
+    public boolean loadPathTemperature() {
+        sPref = context.getSharedPreferences("save_change_type", MODE_PRIVATE);
+        return sPref.getBoolean("path_temper", true);
+    }
+
 }

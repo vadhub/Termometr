@@ -1,7 +1,6 @@
 package com.vadim.termometr.screens.main;
 
 import com.vadim.termometr.R;
-import com.vadim.termometr.temperprocessor.TemperatureProcessor;
 
 public class TemperPresentor {
 
@@ -14,7 +13,6 @@ public class TemperPresentor {
 
     public void setTemperature() {
         float t = temperatureProcessor.getTemperatureCPU();
-        System.out.println(t);
         if (t==-100) {
             view.showError(R.string.warning);
         }

@@ -1,5 +1,6 @@
 package com.vadim.termometr.temperprocessor;
 
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.reflect.Field;
@@ -9,20 +10,8 @@ import java.util.Map;
 
 public class TemperatureFromPath {
 
-    public String getFileTemper() {
+    public String getTemperature() {
         return parsingListPaths(getTemperaturePaths());
-    }
-
-    private static TemperatureFromPath temperatureProcessor;
-
-    private TemperatureFromPath() {
-    }
-
-    public static TemperatureFromPath getInstance() {
-        if (temperatureProcessor==null) {
-            temperatureProcessor = new TemperatureFromPath();
-        }
-        return temperatureProcessor;
     }
 
     private String cat(String file) {
@@ -31,15 +20,12 @@ public class TemperatureFromPath {
         String line = "";
         try {
             reader = new BufferedReader(new FileReader(file));
-
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
+            while((line = reader.readLine()) != null) {
+                result.append(line).append("\n");
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         } finally {
-            if(reader != null) {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (Exception e) {
@@ -47,25 +33,22 @@ public class TemperatureFromPath {
                 }
             }
         }
-
         return result.toString();
     }
 
     private String parsingListPaths(Map<String, String> listPaths) {
-        String tmp = null;
+        String tmp = "";
         for (String key: listPaths.keySet()) {
             tmp = cat(listPaths.get(key));
             if (!tmp.equals("")) {
                 return listPaths.get(key);
             }
         }
-
         return tmp;
     }
 
     private Map<String, String> getTemperaturePaths() {
         Map<String, String> listPaths = new HashMap<>();
-
         for (Field field: TemperaturePaths.class.getDeclaredFields()) {
             int modifiers = field.getModifiers();
             if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
@@ -76,7 +59,6 @@ public class TemperatureFromPath {
                 }
             }
         }
-
         return listPaths;
     }
 }

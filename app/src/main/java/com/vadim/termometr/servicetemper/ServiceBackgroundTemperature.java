@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.vadim.termometr.R;
-import com.vadim.termometr.temperprocessor.TemperatureProcessor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.viewable.ViewableResult;
 

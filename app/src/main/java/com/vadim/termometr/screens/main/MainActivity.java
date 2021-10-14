@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == READ_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+            presenter.getTemperature();
         }
     }
 
@@ -66,19 +66,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //presenter = new TemperPresentor(this);
+        presenter = new TemperPresentor(this);
         saveData = new SaveData(this);
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
         service = new Intent(this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
 
         //Check sensor is null if null to commandline temperature
         if (mTempSensor==null) {
-            //presenter.setTemperature();
             requestPermissions();
             Log.i("presenter", "ok");
         }
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_REQUEST);
         } else {
-
+            presenter.getTemperature();
         }
     }
 

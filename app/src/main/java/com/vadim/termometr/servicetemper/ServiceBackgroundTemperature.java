@@ -14,6 +14,8 @@ import android.os.IBinder;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.vadim.termometr.R;
+import com.vadim.termometr.temperprocessor.TemperatureFromPath;
+import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.viewable.ViewableResult;
 
@@ -25,7 +27,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     protected Handler handler;
     protected boolean isLife;
     protected boolean isCelsia;
-    private TemperatureProcessor temperatureProcessor;
+    private TemperatureFromPath temperatureFromPath = new TemperatureFromPath();
     private NotificationHelper notificationHelper;
 
     @Override
@@ -41,7 +43,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         super.onCreate();
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         handler = new Handler();
-        temperatureProcessor = new TemperatureProcessor();
+
         notificationHelper = new NotificationHelper();
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null) {
             mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
@@ -55,7 +57,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         handler.post(new Runnable() {
             @Override
             public void run() {
-                temperature = temperatureProcessor.getTemperatureCPU();
+                temperature = Convertor.temperatureHuman(temperatureFromPath.getTemperature());
                 startForeground(1, notificationHelper.viewNotification(temperature, isCelsia));
                 handler.postDelayed(this, 1000);
                 if(!isLife){

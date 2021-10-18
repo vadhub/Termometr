@@ -58,8 +58,8 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
             @Override
             public void run() {
                 temperature = Convertor.temperatureHuman(temperatureFromPath.getTemperature());
-                startForeground(1, notificationHelper.viewNotification(temperature, isCelsia));
-                handler.postDelayed(this, 1000);
+                startForeground(1, notificationHelper.viewNotification(temperature, isCelsia, ServiceBackgroundTemperature.this));
+                handler.postDelayed(this, 2000);
                 if(!isLife){
                     handler.removeCallbacks(this);
                     NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
@@ -77,7 +77,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onSensorChanged(SensorEvent event) {
         temperature = event.values[0];
-        startForeground(1, notificationHelper.viewNotification(temperature, isCelsia));
+        startForeground(1, notificationHelper.viewNotification(temperature, isCelsia, this));
     }
 
     @Override

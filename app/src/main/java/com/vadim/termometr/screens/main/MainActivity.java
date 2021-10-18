@@ -2,24 +2,19 @@ package com.vadim.termometr.screens.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
-
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +22,6 @@ import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -36,7 +30,6 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.vadim.termometr.R;
 import com.vadim.termometr.servicetemper.ServiceBackgroundTemperature;
 import com.vadim.termometr.temperatureview.Termometr;
-import com.vadim.termometr.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.utils.SaveData;
@@ -52,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mTempSensor;
     private Intent service;
     private SaveData saveData;
+    private NotificationHelper helper;
     private static final int READ_REQUEST = 1123445;
 
     @Override
@@ -72,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        helper = new NotificationHelper();
+        notificationManagerCompat.notify(2222,helper.viewNotification(44, true, this));
 
         service = new Intent(this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
@@ -96,8 +94,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aSwitchService.setChecked(saveData.loadState());
         if (saveData.loadState()) {
             startService(service);
+            System.out.println("savedata true");
         } else {
             stopService(service);
+            System.out.println("savedata false");
         }
 
         //switch

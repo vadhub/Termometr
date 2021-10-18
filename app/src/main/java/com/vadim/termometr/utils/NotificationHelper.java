@@ -43,19 +43,18 @@ public class NotificationHelper extends Application {
         }
     }
 
-    public Notification viewNotification(float temper, boolean typeTemper) {
-
-        RemoteViews termometerNotif = new RemoteViews(getPackageName(), R.layout.termometer_notif);
+    public Notification viewNotification(float temper, boolean typeTemper, Context context) {
+        RemoteViews termometerNotif = new RemoteViews(context.getPackageName(), R.layout.termometer_notif);
         termometerNotif.setTextViewText(R.id.textViewTemper, Convertor.temperatureConvertor(temper, typeTemper));
 
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        Intent resultIntent = new Intent(context, MainActivity.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(
-                this,
+                context,
                 0,
                 resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
-        Notification builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        Notification builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setCustomContentView(termometerNotif)
                 .setOngoing(true)

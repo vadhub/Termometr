@@ -26,7 +26,8 @@ public class NotificationHelper extends Application {
     }
 
     public static void notificationClear(Context context) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
@@ -44,8 +45,14 @@ public class NotificationHelper extends Application {
     }
 
     public Notification viewNotification(float temper, boolean typeTemper, Context context) {
-        RemoteViews termometerNotif = new RemoteViews(context.getPackageName(), R.layout.termometer_notif);
-        termometerNotif.setTextViewText(R.id.textViewTemper, Convertor.temperatureConvertor(temper, typeTemper));
+        RemoteViews termometerNotif = new RemoteViews(
+                context.getPackageName(),
+                R.layout.termometer_notif
+        );
+        termometerNotif.setTextViewText(
+                R.id.textViewTemper,
+                Convertor.temperatureConvertor(temper, typeTemper)
+        );
 
         Intent resultIntent = new Intent(context, MainActivity.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(

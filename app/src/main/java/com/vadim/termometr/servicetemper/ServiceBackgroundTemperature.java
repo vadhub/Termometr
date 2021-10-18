@@ -1,9 +1,6 @@
 package com.vadim.termometr.servicetemper;
 
-import android.app.NotificationManager;
-
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,10 +14,9 @@ import com.vadim.termometr.R;
 import com.vadim.termometr.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
-import com.vadim.termometr.viewable.ViewableResult;
 
 
-public class ServiceBackgroundTemperature extends Service implements SensorEventListener, ViewableResult {
+public class ServiceBackgroundTemperature extends Service implements SensorEventListener {
     protected float temperature;
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
@@ -41,7 +37,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onCreate() {
         super.onCreate();
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         handler = new Handler();
 
         notificationHelper = new NotificationHelper();
@@ -52,15 +48,22 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         }
     }
 
-    @Override
+
     public void updateResult() {
         handler.post(new Runnable() {
             @Override
             public void run() {
                 temperature = Convertor.temperatureHuman(temperatureFromPath.getTemperature());
-                startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.viewNotification(temperature, isCelsia, ServiceBackgroundTemperature.this));
+                startForeground(
+                        NotificationHelper.NOTIFICATION_ID,
+                        notificationHelper.viewNotification(
+                                temperature,
+                                isCelsia,
+                                ServiceBackgroundTemperature.this
+                        )
+                );
                 handler.postDelayed(this, 2000);
-                if(!isLife){
+                if (!isLife) {
                     handler.removeCallbacks(this);
                     NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
                 }
@@ -76,19 +79,24 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onSensorChanged(SensorEvent event) {
         temperature = event.values[0];
-        startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.viewNotification(temperature, isCelsia, this));
+        startForeground(
+                NotificationHelper.NOTIFICATION_ID,
+                notificationHelper.viewNotification(
+                        temperature,
+                        isCelsia,
+                        this
+                )
+        );
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        String resource = getResources().getString(R.string.service_stop);
-        Toast.makeText(getApplicationContext(), resource, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.service_stop), Toast.LENGTH_SHORT).show();
         isLife =false;
     }
 }

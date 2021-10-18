@@ -112,7 +112,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void requestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_REQUEST);
+            requestPermissions(
+                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_REQUEST
+            );
         } else {
             presenter.getTemperature();
         }
@@ -138,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 saveData.saveChangedTypeTemperature(false);
                 break;
         }
-        service.putExtra("typeTemperature",saveData.loadChangedTypeTemperature());
+        service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
         if (saveData.loadState()) {
             restartService();
         }
@@ -149,7 +152,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         if (mTempSensor!=null) {
-            mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(
+                    this,
+                    mTempSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL
+            );
         }
     }
 
@@ -157,7 +164,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent event) {
         thermometer.setCurrentTemp(event.values[0], saveData.loadChangedTypeTemperature());
         Log.i("temper", event.values[0]+"");
-        getSupportActionBar().setTitle(Convertor.temperatureConvertor(event.values[0], saveData.loadChangedTypeTemperature()));
+        getSupportActionBar()
+                .setTitle(
+                        Convertor
+                                .temperatureConvertor(
+                                        event.values[0],
+                                        saveData.loadChangedTypeTemperature()
+                                )
+                );
     }
 
     @Override
@@ -175,7 +189,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void getTemperatureGPU(float t) {
         thermometer.setCurrentTemp(t, saveData.loadChangedTypeTemperature());
         Log.i("cpu", t+"");
-        getSupportActionBar().setTitle(Convertor.temperatureConvertor(t, saveData.loadChangedTypeTemperature()));
+        getSupportActionBar()
+                .setTitle(
+                        Convertor
+                                .temperatureConvertor(
+                                t,
+                                saveData.loadChangedTypeTemperature()
+                        )
+                );
     }
 
     @Override

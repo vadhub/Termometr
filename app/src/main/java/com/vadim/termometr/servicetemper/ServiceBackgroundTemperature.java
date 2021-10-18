@@ -15,7 +15,6 @@ import com.vadim.termometr.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 
-
 public class ServiceBackgroundTemperature extends Service implements SensorEventListener {
     protected float temperature;
     protected SensorManager mSensorManager;
@@ -48,7 +47,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         }
     }
 
-
     public void updateResult() {
         handler.post(new Runnable() {
             @Override
@@ -70,6 +68,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
             }
         });
     }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -96,7 +95,11 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.service_stop), Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                getApplicationContext(),
+                getResources().getString(R.string.service_stop),
+                Toast.LENGTH_SHORT
+        ).show();
         isLife =false;
     }
 }

@@ -18,14 +18,14 @@ import com.vadim.termometr.screens.main.MainActivity;
 public class NotificationHelper extends Application {
 
     public static final String CHANNEL_ID = "service";
-
+    public static final int NOTIFICATION_ID = 2;
     @Override
     public void onCreate() {
         super.onCreate();
         createChannel();
     }
 
-    public static void notificationClear(int NOTIFICATION_ID, Context context) {
+    public static void notificationClear(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
     }

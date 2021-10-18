@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mTempSensor;
     private Intent service;
     private SaveData saveData;
-    private NotificationHelper helper;
     private static final int READ_REQUEST = 1123445;
 
     @Override
@@ -66,10 +65,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        helper = new NotificationHelper();
-        notificationManagerCompat.notify(2222,helper.viewNotification(44, true, this));
 
         service = new Intent(this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
@@ -108,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     startService(service);
                 } else {
                     stopService(service);
-                    NotificationHelper.notificationClear(1, MainActivity.this);
+                    NotificationHelper.notificationClear(MainActivity.this);
                 }
                 saveData.saveState(isChecked);
             }
@@ -172,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //restart notification service
     private void restartService() {
         stopService(service);
-        NotificationHelper.notificationClear(1, this);
+        NotificationHelper.notificationClear(this);
         startService(service);
     }
 

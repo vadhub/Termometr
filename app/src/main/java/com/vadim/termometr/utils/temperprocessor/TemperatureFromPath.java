@@ -1,4 +1,4 @@
-package com.vadim.termometr.temperprocessor;
+package com.vadim.termometr.utils.temperprocessor;
 
 
 import java.io.BufferedReader;
@@ -23,7 +23,8 @@ public class TemperatureFromPath {
             while((line = reader.readLine()) != null) {
                 result.append(line).append("\n");
             }
-        } catch (Exception ignored) {
+        } catch (Exception exception) {
+            exception.printStackTrace();
         } finally {
             if (reader != null) {
                 try {

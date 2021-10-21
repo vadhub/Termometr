@@ -2,7 +2,9 @@ package com.vadim.termometr.screens.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -45,13 +47,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mTempSensor;
     private Intent service;
     private SaveData saveData;
-    private static final int READ_REQUEST = 1123445;
+    private static final int READ_REQUEST = 11235;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == READ_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            presenter.getTemperature();
+        Log.i("request permission", grantResults[0]+"");
+        if (requestCode == READ_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                presenter.getTemperature();
+            }
         }
     }
 
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //Check sensor is null if null to commandline temperature
         if (mTempSensor==null) {
-            requestPermissions();
+            checkPermissions();
             Log.i("presenter", "ok");
         }
 
@@ -110,9 +115,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-    private void requestPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(
+    private void checkPermissions() {
+        if (
+                ContextCompat.checkSelfPermission(
+                        MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                    MainActivity.this,
                     new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
                     READ_REQUEST
             );
@@ -186,15 +195,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public void getTemperatureGPU(float t) {
-        thermometer.setCurrentTemp(t, saveData.loadChangedTypeTemperature());
-        Log.i("cpu", t+"");
+    public void getTemperatureGPU(float temperature) {
+        thermometer.setCurrentTemp(temperature, saveData.loadChangedTypeTemperature());
+        Log.i("cpu", temperature+"");
         getSupportActionBar()
                 .setTitle(
                         Convertor
                                 .temperatureConvertor(
-                                t,
-                                saveData.loadChangedTypeTemperature()
+                                        temperature,
+                                        saveData.loadChangedTypeTemperature()
                         )
                 );
     }

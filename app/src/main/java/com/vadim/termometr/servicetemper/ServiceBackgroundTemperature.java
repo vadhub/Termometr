@@ -20,7 +20,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
     protected Handler handler;
-    protected boolean isLife;
+    protected boolean isLife = true;
     protected boolean isCelsia;
     private TemperatureFromPath temperatureFromPath = new TemperatureFromPath();
     private NotificationHelper notificationHelper;
@@ -29,8 +29,10 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public int onStartCommand(Intent intent, int flags, int startId) {
         isLife = true;
         isCelsia = intent.getExtras().getBoolean("typeTemperature");
-        if (mSensorManager==null) {
+
+        if (mTempSensor == null) {
             updateResult();
+            System.out.println(isLife+"________________________________________________");
         }
 
         return START_NOT_STICKY;
@@ -51,22 +53,20 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     }
 
     public void updateResult() {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                temperature = Convertor.temperatureHuman(temperatureFromPath.getTemperature());
-                startForeground(
-                        NotificationHelper.NOTIFICATION_ID,
-                        notificationHelper.viewNotification(
-                                temperature,
-                                isCelsia,
-                                ServiceBackgroundTemperature.this
-                        )
-                );
-                handler.postDelayed(this, 2000);
-            }
+        Runnable r = () -> {
+            temperature = Convertor.temperatureHuman(temperatureFromPath.getTemperature());
+            startForeground(
+                    NotificationHelper.NOTIFICATION_ID,
+                    notificationHelper.viewNotification(
+                            temperature,
+                            isCelsia,
+                            ServiceBackgroundTemperature.this
+                    )
+            );
         };
+        handler.postDelayed(r, 1000);
 
+        System.out.println(isLife);
         if (!isLife) {
             handler.removeCallbacks(r);
             NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
@@ -104,6 +104,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
                 getResources().getString(R.string.service_stop),
                 Toast.LENGTH_SHORT
         ).show();
-        isLife =false;
+        isLife = false;
     }
 }

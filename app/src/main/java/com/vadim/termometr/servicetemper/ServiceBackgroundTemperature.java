@@ -40,14 +40,18 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void onCreate() {
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+
+        if (mTempSensor != null) {
+            mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+
         handler = new Handler();
         notificationHelper = new NotificationHelper();
     }
 
     public void updateResult() {
-        handler.post(new Runnable() {
+        Runnable r = new Runnable() {
             @Override
             public void run() {
                 temperature = Convertor.temperatureHuman(temperatureFromPath.getTemperature());
@@ -60,12 +64,13 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
                         )
                 );
                 handler.postDelayed(this, 2000);
-                if (!isLife) {
-                    handler.removeCallbacks(this);
-                    NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
-                }
             }
-        });
+        };
+
+        if (!isLife) {
+            handler.removeCallbacks(r);
+            NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
+        }
     }
 
     @Nullable
@@ -77,7 +82,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onSensorChanged(SensorEvent event) {
         temperature = event.values[0];
-        System.out.println(temperature+"-_----------------------------");
         startForeground(
                 NotificationHelper.NOTIFICATION_ID,
                 notificationHelper.viewNotification(

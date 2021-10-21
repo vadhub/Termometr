@@ -11,7 +11,7 @@ import android.os.IBinder;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.vadim.termometr.R;
-import com.vadim.termometr.temperprocessor.TemperatureFromPath;
+import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 
@@ -29,7 +29,10 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public int onStartCommand(Intent intent, int flags, int startId) {
         isLife = true;
         isCelsia = intent.getExtras().getBoolean("typeTemperature");
-        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
+        if (mSensorManager==null) {
+            updateResult();
+        }
+
         return START_NOT_STICKY;
     }
 
@@ -37,14 +40,10 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void onCreate() {
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
         handler = new Handler();
-
         notificationHelper = new NotificationHelper();
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!=null) {
-            mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        } else {
-            updateResult();
-        }
     }
 
     public void updateResult() {
@@ -78,12 +77,13 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     @Override
     public void onSensorChanged(SensorEvent event) {
         temperature = event.values[0];
+        System.out.println(temperature+"-_----------------------------");
         startForeground(
                 NotificationHelper.NOTIFICATION_ID,
                 notificationHelper.viewNotification(
                         temperature,
                         isCelsia,
-                        this
+                        ServiceBackgroundTemperature.this
                 )
         );
     }

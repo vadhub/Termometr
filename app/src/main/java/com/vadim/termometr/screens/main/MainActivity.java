@@ -3,12 +3,10 @@ package com.vadim.termometr.screens.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Termometr thermometer;
     private AdView mAdView;
     private Switch aSwitchService;
-    private TemperPresentor presenter;
+    private TemperPresenter presenter;
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
     private Intent service;
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new TemperPresentor(this);
+        presenter = new TemperPresenter(this);
         saveData = new SaveData(this);
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
@@ -195,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public void getTemperatureGPU(float temperature) {
+    public void showTemperatureGPU(float temperature) {
         thermometer.setCurrentTemp(temperature, saveData.loadChangedTypeTemperature());
         Log.i("cpu", temperature+"");
         getSupportActionBar()

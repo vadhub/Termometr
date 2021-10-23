@@ -1,6 +1,6 @@
 package com.vadim.termometr.screens.main;
 
 public interface TemperatureView {
-    void getTemperatureGPU(float t);
+    void showTemperatureGPU(float t);
     void showError(int str);
 }

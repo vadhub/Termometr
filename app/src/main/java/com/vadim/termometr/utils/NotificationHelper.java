@@ -19,6 +19,7 @@ public class NotificationHelper extends Application {
 
     public static final String CHANNEL_ID = "service";
     public static final int NOTIFICATION_ID = 2;
+
     @Override
     public void onCreate() {
         super.onCreate();

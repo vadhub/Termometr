@@ -25,7 +25,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     protected boolean isLife = true;
     protected boolean isCelsia;
     private TemperPresenter presenter;
-    private TemperatureFromPath temperatureFromPath = new TemperatureFromPath();
     private NotificationHelper notificationHelper;
 
     @Override
@@ -41,7 +40,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         handler = new Handler();
-
 
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {

@@ -10,10 +10,24 @@ import java.util.Map;
 
 public class TemperatureFromPath {
 
+    //parsinglist -> cat -> getpaths -> Class TemperaturePaths
     public String getTemperature() {
         return parsingListPaths(getTemperaturePaths());
     }
 
+    //read every field from Map return value temper
+    private String parsingListPaths(Map<String, String> listPaths) {
+        String tmp = "";
+        for (String key: listPaths.keySet()) {
+            tmp = cat(listPaths.get(key));
+            if (!tmp.equals("")) {
+                return listPaths.get(key);
+            }
+        }
+        return tmp;
+    }
+
+    //read value from file
     private String cat(String file) {
         BufferedReader reader = null;
         StringBuilder result = new StringBuilder();
@@ -37,17 +51,7 @@ public class TemperatureFromPath {
         return result.toString();
     }
 
-    private String parsingListPaths(Map<String, String> listPaths) {
-        String tmp = "";
-        for (String key: listPaths.keySet()) {
-            tmp = cat(listPaths.get(key));
-            if (!tmp.equals("")) {
-                return listPaths.get(key);
-            }
-        }
-        return tmp;
-    }
-
+    //get paths from Class TemperaturePaths
     private Map<String, String> getTemperaturePaths() {
         Map<String, String> listPaths = new HashMap<>();
         for (Field field: TemperaturePaths.class.getDeclaredFields()) {

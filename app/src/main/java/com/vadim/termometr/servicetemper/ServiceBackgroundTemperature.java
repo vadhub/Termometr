@@ -11,17 +11,20 @@ import android.os.IBinder;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.vadim.termometr.R;
+import com.vadim.termometr.screens.main.TemperPresenter;
+import com.vadim.termometr.screens.main.TemperatureView;
 import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 
-public class ServiceBackgroundTemperature extends Service implements SensorEventListener {
-    protected float temperature;
+public class ServiceBackgroundTemperature extends Service implements SensorEventListener, TemperatureView {
+
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
     protected Handler handler;
     protected boolean isLife = true;
     protected boolean isCelsia;
+    private TemperPresenter presenter;
     private TemperatureFromPath temperatureFromPath = new TemperatureFromPath();
     private NotificationHelper notificationHelper;
 
@@ -29,12 +32,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public int onStartCommand(Intent intent, int flags, int startId) {
         isLife = true;
         isCelsia = intent.getExtras().getBoolean("typeTemperature");
-
-        if (mTempSensor == null) {
-            updateResult();
-            System.out.println(isLife+"________________________________________________");
-        }
-
         return START_NOT_STICKY;
     }
 
@@ -43,33 +40,17 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        handler = new Handler();
 
+
+        notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
             mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        handler = new Handler();
-        notificationHelper = new NotificationHelper();
-    }
-
-    public void updateResult() {
-        Runnable r = () -> {
-            temperature = Convertor.temperatureHuman(temperatureFromPath.getTemperature());
-            startForeground(
-                    NotificationHelper.NOTIFICATION_ID,
-                    notificationHelper.viewNotification(
-                            temperature,
-                            isCelsia,
-                            ServiceBackgroundTemperature.this
-                    )
-            );
-        };
-        handler.postDelayed(r, 1000);
-
-        System.out.println(isLife);
-        if (!isLife) {
-            handler.removeCallbacks(r);
-            NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
+        if (mTempSensor == null) {
+            presenter = new TemperPresenter(this);
+            presenter.getTemperature();
         }
     }
 
@@ -81,11 +62,10 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        temperature = event.values[0];
         startForeground(
                 NotificationHelper.NOTIFICATION_ID,
                 notificationHelper.viewNotification(
-                        temperature,
+                        event.values[0],
                         isCelsia,
                         ServiceBackgroundTemperature.this
                 )
@@ -105,5 +85,29 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
                 Toast.LENGTH_SHORT
         ).show();
         isLife = false;
+    }
+
+    @Override
+    public void showTemperatureGPU(float t) {
+        Runnable r = () -> {
+            startForeground(
+                    NotificationHelper.NOTIFICATION_ID,
+                    notificationHelper.viewNotification(
+                            t,
+                            isCelsia,
+                            ServiceBackgroundTemperature.this
+                    )
+            );
+        };
+        handler.postDelayed(r, 1000);
+        if (!isLife) {
+            handler.removeCallbacks(r);
+            NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
+        }
+    }
+
+    @Override
+    public void showError(int str) {
+
     }
 }

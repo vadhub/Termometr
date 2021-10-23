@@ -99,17 +99,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         //switch
-        aSwitchService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    startService(service);
-                } else {
-                    stopService(service);
-                    NotificationHelper.notificationClear(MainActivity.this);
-                }
-                saveData.saveState(isChecked);
+        aSwitchService.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                startService(service);
+            } else {
+                stopService(service);
+                NotificationHelper.notificationClear(MainActivity.this);
             }
+            saveData.saveState(isChecked);
         });
     }
 
@@ -149,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
         }
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
+
         if (saveData.loadState()) {
             restartService();
         }
@@ -169,14 +167,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        thermometer.setCurrentTemp(event.values[0], saveData.loadChangedTypeTemperature());
+        boolean type = saveData.loadChangedTypeTemperature();
+        thermometer.setCurrentTemp(event.values[0], type);
         Log.i("temper", event.values[0]+"");
         getSupportActionBar()
                 .setTitle(
                         Convertor
                                 .temperatureConvertor(
                                         event.values[0],
-                                        saveData.loadChangedTypeTemperature()
+                                        type
                                 )
                 );
     }
@@ -194,14 +193,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void showTemperatureGPU(float temperature) {
-        thermometer.setCurrentTemp(temperature, saveData.loadChangedTypeTemperature());
-        Log.i("cpu", temperature+"");
+        boolean type = saveData.loadChangedTypeTemperature();
+        thermometer.setCurrentTemp(temperature, type);
         getSupportActionBar()
                 .setTitle(
                         Convertor
                                 .temperatureConvertor(
                                         temperature,
-                                        saveData.loadChangedTypeTemperature()
+                                        type
                         )
                 );
     }

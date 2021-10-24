@@ -9,9 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.widget.RemoteViews;
-
 import androidx.core.app.NotificationCompat;
-
 import com.vadim.termometr.R;
 import com.vadim.termometr.screens.main.MainActivity;
 

@@ -15,7 +15,7 @@ public class TemperPresenter {
 
     public void getTemperature() {
         if (view.loadPathTemperature().equals("")) {
-            chekPath();
+            checkPath();
         } else {
             float t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));
             if (t==-100) {
@@ -25,7 +25,7 @@ public class TemperPresenter {
         }
     }
 
-    private void chekPath() {
+    private void checkPath() {
         if (!temperature.getTemperaturePath().equals("")) {
             view.savePathTemperature(temperature.getTemperaturePath());
         }

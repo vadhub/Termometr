@@ -27,7 +27,7 @@ public class TemperatureFromPath {
     }
 
     //read value from file
-    private String cat(String file) {
+    public String cat(String file) {
         BufferedReader reader = null;
         StringBuilder result = new StringBuilder();
         String line = "";

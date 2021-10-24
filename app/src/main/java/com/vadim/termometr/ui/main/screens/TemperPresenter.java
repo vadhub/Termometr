@@ -1,4 +1,4 @@
-package com.vadim.termometr.screens.main;
+package com.vadim.termometr.ui.main.screens;
 
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
@@ -10,7 +10,7 @@ public class TemperPresenter {
     private TemperatureFromPath temperature = new TemperatureFromPath();
 
     public TemperPresenter(TemperatureView view) {
-        this.view=view;
+        this.view= view;
     }
 
     public void getTemperature() {

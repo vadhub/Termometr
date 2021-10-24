@@ -1,4 +1,4 @@
-package com.vadim.termometr.servicetemper;
+package com.vadim.termometr.ui.main.servicetemper;
 
 import android.app.Service;
 import android.content.Intent;
@@ -11,13 +11,11 @@ import android.os.IBinder;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.vadim.termometr.R;
-import com.vadim.termometr.screens.main.TemperPresenter;
-import com.vadim.termometr.screens.main.TemperatureView;
-import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
-import com.vadim.termometr.utils.Convertor;
+import com.vadim.termometr.ui.main.screens.TemperPresenter;
+import com.vadim.termometr.ui.main.screens.TemperatureView;
 import com.vadim.termometr.utils.NotificationHelper;
 
-public class ServiceBackgroundTemperature extends Service implements SensorEventListener, TemperatureViewService {
+public class ServiceBackgroundTemperature extends Service implements SensorEventListener, TemperatureView {
 
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
@@ -47,7 +45,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         }
 
         if (mTempSensor == null) {
-            presenter = new TemperPresenter((TemperatureView) this);
+            presenter = new TemperPresenter(this);
             presenter.getTemperature();
         }
     }
@@ -109,5 +107,15 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void showError(int str) {
         Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
         isLife = false;
+    }
+
+    @Override
+    public void savePathTemperature(String path) {
+
+    }
+
+    @Override
+    public String loadPathTemperature() {
+        return null;
     }
 }

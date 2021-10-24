@@ -1,4 +1,4 @@
-package com.vadim.termometr.temperatureview;
+package com.vadim.termometr.ui.main.temperatureview;
 
 import android.content.Context;
 import android.content.res.Resources;

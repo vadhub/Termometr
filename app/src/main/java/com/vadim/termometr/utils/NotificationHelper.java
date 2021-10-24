@@ -11,7 +11,7 @@ import android.os.Build;
 import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 import com.vadim.termometr.R;
-import com.vadim.termometr.screens.main.MainActivity;
+import com.vadim.termometr.ui.main.screens.MainActivity;
 
 public class NotificationHelper extends Application {
 

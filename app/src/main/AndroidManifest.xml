@@ -19,7 +19,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5356301729869498~7102025396" />
 
-        <activity android:name=".screens.main.MainActivity"
+        <activity android:name=".ui.main.screens.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,7 @@
         </activity>
 
         <service
-            android:name=".servicetemper.ServiceBackgroundTemperature"
+            android:name=".ui.main.servicetemper.ServiceBackgroundTemperature"
             android:enabled="true"
             android:exported="true"
             android:label="serviceRegistTemper"

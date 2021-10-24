@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.main.MainActivity">
+    tools:context=".ui.main.screens.MainActivity">
 
 
-    <com.vadim.termometr.temperatureview.Termometr
+    <com.vadim.termometr.ui.main.temperatureview.Termometr
         android:id="@+id/thermometer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.vadim.termometr.screens.main;
+package com.vadim.termometr.ui.main.screens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +15,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
@@ -28,8 +26,8 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.vadim.termometr.R;
-import com.vadim.termometr.servicetemper.ServiceBackgroundTemperature;
-import com.vadim.termometr.temperatureview.Termometr;
+import com.vadim.termometr.ui.main.servicetemper.ServiceBackgroundTemperature;
+import com.vadim.termometr.ui.main.temperatureview.Termometr;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.utils.SaveData;

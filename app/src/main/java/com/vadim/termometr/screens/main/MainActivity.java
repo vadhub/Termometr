@@ -214,4 +214,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void savePathTemperature(String path) {
         saveData.savePath(path);
     }
+
+    @Override
+    public String loadPathTemperature() {
+        return saveData.loadPath();
+    }
 }

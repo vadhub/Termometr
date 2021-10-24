@@ -115,4 +115,9 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void savePathTemperature(String path) {
 
     }
+
+    @Override
+    public String loadPathTemperature() {
+        return null;
+    }
 }

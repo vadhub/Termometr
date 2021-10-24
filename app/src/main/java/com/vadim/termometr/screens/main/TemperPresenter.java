@@ -14,14 +14,18 @@ public class TemperPresenter {
     }
 
     public void getTemperature() {
-        float t = Convertor.temperatureHuman(temperature.getTemperaturePath());
-        if (t==-100) {
-            view.showError(R.string.warning);
+        if (view.loadPathTemperature().equals("")) {
+            chekPath();
+        } else {
+            float t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));
+            if (t==-100) {
+                view.showError(R.string.warning);
+            }
+            view.showTemperatureGPU(t);
         }
-        view.showTemperatureGPU(t);
     }
 
-    private void chekPaths() {
+    private void chekPath() {
         if (!temperature.getTemperaturePath().equals("")) {
             view.savePathTemperature(temperature.getTemperaturePath());
         }

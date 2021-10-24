@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.i("request permission", grantResults[0]+"");
         if (requestCode == READ_REQUEST) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 presenter.getTemperature();
@@ -75,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Check sensor is null if null to commandline temperature
         if (mTempSensor == null) {
             checkPermissions();
-            Log.i("presenter", "ok");
         }
 
         //AdMob
@@ -92,10 +90,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aSwitchService.setChecked(saveData.loadState());
         if (saveData.loadState()) {
             startService(service);
-            System.out.println("savedata true");
         } else {
             stopService(service);
-            System.out.println("savedata false");
         }
 
         //switch
@@ -169,11 +165,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent event) {
         boolean type = saveData.loadChangedTypeTemperature();
         thermometer.setCurrentTemp(event.values[0], type);
-        Log.i("temper", event.values[0]+"");
-        getSupportActionBar()
-                .setTitle(
-                        Convertor
-                                .temperatureConvertor(
+        getSupportActionBar().setTitle(
+                        Convertor.temperatureConvertor(
                                         event.values[0],
                                         type
                                 )
@@ -195,10 +188,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void showTemperatureGPU(float temperature) {
         boolean type = saveData.loadChangedTypeTemperature();
         thermometer.setCurrentTemp(temperature, type);
-        getSupportActionBar()
-                .setTitle(
-                        Convertor
-                                .temperatureConvertor(
+        getSupportActionBar().setTitle(
+                        Convertor.temperatureConvertor(
                                         temperature,
                                         type
                         )

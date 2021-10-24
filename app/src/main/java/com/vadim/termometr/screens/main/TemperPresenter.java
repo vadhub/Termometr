@@ -18,9 +18,6 @@ public class TemperPresenter {
             checkPath();
         } else {
             float t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));
-            if (t==-100) {
-                view.showError(R.string.warning);
-            }
             view.showTemperatureGPU(t);
         }
     }
@@ -28,6 +25,8 @@ public class TemperPresenter {
     private void checkPath() {
         if (!temperature.getTemperaturePath().equals("")) {
             view.savePathTemperature(temperature.getTemperaturePath());
+        } else {
+            view.showError(R.string.warning);
         }
     }
 

@@ -17,7 +17,7 @@ import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 
-public class ServiceBackgroundTemperature extends Service implements SensorEventListener, TemperatureView {
+public class ServiceBackgroundTemperature extends Service implements SensorEventListener, TemperatureViewService {
 
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
@@ -47,7 +47,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         }
 
         if (mTempSensor == null) {
-            presenter = new TemperPresenter(this);
+            presenter = new TemperPresenter((TemperatureView) this);
             presenter.getTemperature();
         }
     }
@@ -109,15 +109,5 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void showError(int str) {
         Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
         isLife = false;
-    }
-
-    @Override
-    public void savePathTemperature(String path) {
-
-    }
-
-    @Override
-    public String loadPathTemperature() {
-        return null;
     }
 }

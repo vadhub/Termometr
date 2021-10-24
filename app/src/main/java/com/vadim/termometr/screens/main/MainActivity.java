@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
 
         //Check sensor is null if null to commandline temperature
-        if (mTempSensor==null) {
+        if (mTempSensor == null) {
             checkPermissions();
             Log.i("presenter", "ok");
         }
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //Process sensor
     protected void onResume() {
         super.onResume();
-        if (mTempSensor!=null) {
+        if (mTempSensor != null) {
             mSensorManager.registerListener(
                     this,
                     mTempSensor,
@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void showError(int str) {
         Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
+        presenter = null;
     }
 
     @Override

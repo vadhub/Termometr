@@ -1,8 +1,8 @@
 package com.vadim.termometr.screens.main;
 
-public interface TemperatureView {
-    void showTemperatureGPU(float t);
-    void showError(int str);
+import com.vadim.termometr.servicetemper.TemperatureViewService;
+
+public interface TemperatureView extends TemperatureViewService {
     void savePathTemperature(String path);
     String loadPathTemperature();
 }

@@ -1,6 +1,5 @@
 package com.vadim.termometr.utils.temperprocessor;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.reflect.Field;
@@ -10,8 +9,8 @@ import java.util.Map;
 
 public class TemperatureFromPath {
 
-    //parsinglist -> cat -> getpaths -> Class TemperaturePaths
-    public String getTemperature() {
+    //parsinglist -> cat(paths) -> Class TemperaturePaths
+    public String getTemperaturePath() {
         return parsingListPaths(getTemperaturePaths());
     }
 

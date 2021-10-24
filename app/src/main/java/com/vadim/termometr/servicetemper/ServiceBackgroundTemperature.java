@@ -72,6 +72,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     @Override
@@ -106,6 +107,12 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void showError(int str) {
+        Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
+        isLife = false;
+    }
+
+    @Override
+    public void savePathTemperature(String path) {
 
     }
 }

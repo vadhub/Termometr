@@ -14,11 +14,17 @@ public class TemperPresenter {
     }
 
     public void getTemperature() {
-        float t = Convertor.temperatureHuman(temperature.getTemperature());
+        float t = Convertor.temperatureHuman(temperature.getTemperaturePath());
         if (t==-100) {
             view.showError(R.string.warning);
         }
         view.showTemperatureGPU(t);
+    }
+
+    private void chekPaths() {
+        if (!temperature.getTemperaturePath().equals("")) {
+            view.savePathTemperature(temperature.getTemperaturePath());
+        }
     }
 
 }

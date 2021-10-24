@@ -209,4 +209,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void showError(int str) {
         Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void savePathTemperature(String path) {
+        saveData.savePath(path);
+    }
 }

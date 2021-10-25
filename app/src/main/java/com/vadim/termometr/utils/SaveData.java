@@ -47,7 +47,7 @@ public class SaveData {
     }
 
     public String loadPath() {
-        sPref = context.getSharedPreferences("save_change_type", MODE_PRIVATE);
+        sPref = context.getSharedPreferences("temper", MODE_PRIVATE);
         return sPref.getString("path_temper", "");
     }
 

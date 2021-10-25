@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.vadim.termometr.R;
@@ -19,16 +20,21 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
-    protected Handler handler;
+    private Handler handler;
     protected boolean isLife = true;
     protected boolean isCelsia;
     private TemperPresenter presenter;
     private NotificationHelper notificationHelper;
+    private String path = "";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         isLife = true;
         isCelsia = intent.getExtras().getBoolean("typeTemperature");
+        path = intent.getExtras().getString("temperPath");
+        presenter.getTemperature();
+        Log.i("temperPath", path+isLife);
+
         return START_NOT_STICKY;
     }
 
@@ -41,12 +47,16 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
-            mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(
+                    this,
+                    mTempSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL
+            );
         }
 
         if (mTempSensor == null) {
+            Log.i("preset", "pre");
             presenter = new TemperPresenter(this);
-            presenter.getTemperature();
         }
     }
 
@@ -86,22 +96,28 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void showTemperatureGPU(float t) {
-        Runnable r = () -> {
-            startForeground(
-                    NotificationHelper.NOTIFICATION_ID,
-                    notificationHelper.viewNotification(
-                            t,
-                            isCelsia,
-                            ServiceBackgroundTemperature.this
-                    )
-            );
-        };
-        handler.postDelayed(r, 1000);
+        runnable.run();
+        startForeground(
+                NotificationHelper.NOTIFICATION_ID,
+                notificationHelper.viewNotification(
+                        t,
+                        isCelsia,
+                        ServiceBackgroundTemperature.this
+                )
+        );
         if (!isLife) {
-            handler.removeCallbacks(r);
+            handler.removeCallbacks(runnable);
             NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
         }
     }
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("________________-"+334);
+            handler.postDelayed(this, 5000);
+        }
+    };
 
     @Override
     public void showError(int str) {
@@ -116,6 +132,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public String loadPathTemperature() {
-        return null;
+        Log.i("loadPathTemperature", path);
+        return path;
     }
 }

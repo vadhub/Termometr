@@ -1,5 +1,7 @@
 package com.vadim.termometr.ui.main.screens;
 
+import android.util.Log;
+
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
@@ -14,17 +16,19 @@ public class TemperPresenter {
     }
 
     public void getTemperature() {
+        Log.i("testTemer", view.loadPathTemperature()+"");
         if (view.loadPathTemperature().equals("")) {
             checkPath();
         } else {
-            float t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));
+            float t = Float.parseFloat(temperature.catTest(view.loadPathTemperature()));//Convertor.temperatureHuman());
             view.showTemperatureGPU(t);
         }
     }
 
     private void checkPath() {
         if (!temperature.getTemperaturePath().equals("")) {
-            view.savePathTemperature(temperature.getTemperaturePath());
+            //view.savePathTemperature(temperature.getTemperaturePath());
+            view.savePathTemperature("10");
         } else {
             view.showError(R.string.warning);
         }

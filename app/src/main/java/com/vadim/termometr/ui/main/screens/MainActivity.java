@@ -15,6 +15,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,10 +65,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
-        service = new Intent(this, ServiceBackgroundTemperature.class);
+        service = new Intent(MainActivity.this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
+        service.putExtra("temperPath", saveData.loadPath());
 
         //Check sensor is null if null to commandline temperature
         if (mTempSensor == null) {
@@ -203,10 +205,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void savePathTemperature(String path) {
         saveData.savePath(path);
+        Log.i("save", path);
     }
 
     @Override
     public String loadPathTemperature() {
+        Log.i("load", saveData.loadPath());
         return saveData.loadPath();
     }
 }

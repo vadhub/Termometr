@@ -68,14 +68,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        startForeground(
-                NotificationHelper.NOTIFICATION_ID,
-                notificationHelper.viewNotification(
-                        event.values[0],
-                        isCelsia,
-                        ServiceBackgroundTemperature.this
-                )
-        );
+        startForegroundNotification(event.values[0]);
     }
 
     @Override
@@ -96,7 +89,23 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void showTemperatureGPU(float t) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("________________-"+334);
+                startForegroundNotification(t);
+                handler.postDelayed(this, 5000);
+            }
+        };
         runnable.run();
+
+        if (!isLife) {
+            handler.removeCallbacks(runnable);
+            NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
+        }
+    }
+
+    private void startForegroundNotification(float t){
         startForeground(
                 NotificationHelper.NOTIFICATION_ID,
                 notificationHelper.viewNotification(
@@ -105,19 +114,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
                         ServiceBackgroundTemperature.this
                 )
         );
-        if (!isLife) {
-            handler.removeCallbacks(runnable);
-            NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
-        }
     }
-
-    private final Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            System.out.println("________________-"+334);
-            handler.postDelayed(this, 5000);
-        }
-    };
 
     @Override
     public void showError(int str) {

@@ -20,7 +20,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
-
     protected boolean isLife = true;
     protected boolean isCelsia;
     private TemperPresenter presenter;
@@ -43,7 +42,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
             mSensorManager.registerListener(
@@ -83,18 +81,13 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
                 getResources().getString(R.string.service_stop),
                 Toast.LENGTH_SHORT
         ).show();
+        NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
         isLife = false;
     }
 
     @Override
     public void showTemperatureGPU(float t) {
-
         startForegroundNotification(t);
-
-        if (!isLife) {
-            presenter.stopRunnable();
-            NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
-        }
     }
 
     private void startForegroundNotification(float t){

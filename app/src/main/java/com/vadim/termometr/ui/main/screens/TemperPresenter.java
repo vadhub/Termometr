@@ -11,7 +11,8 @@ public class TemperPresenter {
 
     private TemperatureView view;
     private TemperatureFromPath temperature = new TemperatureFromPath();
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
+    private Runnable runnable;
 
     public TemperPresenter(TemperatureView view) {
         this.view= view;
@@ -27,12 +28,14 @@ public class TemperPresenter {
         }
     }
 
-    public void stopRunnable(Runnable runnable) {
-        handler.removeCallbacks(runnable);
+    public void stopRunnable() {
+        if (runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
     }
 
     private void runRunnable(float t) {
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 view.showTemperatureGPU(t);
@@ -41,7 +44,6 @@ public class TemperPresenter {
         };
         runnable.run();
     }
-
     private void checkPath() {
         if (!temperature.getTemperaturePath().equals("")) {
             //view.savePathTemperature(temperature.getTemperaturePath());

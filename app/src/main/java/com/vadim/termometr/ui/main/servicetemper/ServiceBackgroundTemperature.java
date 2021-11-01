@@ -31,7 +31,9 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         isLife = true;
         isCelsia = intent.getExtras().getBoolean("typeTemperature");
         path = intent.getExtras().getString("temperPath");
-        presenter.getTemperature();
+        if (presenter != null) {
+            presenter.getTemperature();
+        }
         Log.i("temperPath", path+isLife);
 
         return START_NOT_STICKY;
@@ -41,7 +43,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void onCreate() {
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
             mSensorManager.registerListener(

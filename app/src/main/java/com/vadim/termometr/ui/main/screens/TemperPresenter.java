@@ -27,8 +27,9 @@ public class TemperPresenter {
         Log.i("testTemer", view.loadPathTemperature()+"");
         if (view.loadPathTemperature().equals("")) {
             checkPath();
+        } else {
+            runRunnable();
         }
-        runRunnable();
     }
 
     public void stopRunnable() {
@@ -61,6 +62,7 @@ public class TemperPresenter {
     private void checkPath() {
         if (!temperature.getTemperaturePath().equals("")) {
             view.savePathTemperature(temperature.getTemperaturePath());
+            runRunnable();
         } else {
             view.showError(R.string.warning);
         }

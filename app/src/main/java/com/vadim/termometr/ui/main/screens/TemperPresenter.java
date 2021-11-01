@@ -2,6 +2,7 @@ package com.vadim.termometr.ui.main.screens;
 
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
@@ -11,11 +12,12 @@ import java.util.Random;
 
 public class TemperPresenter {
 
-    private TemperatureView view;
-    private TemperatureFromPath temperature = new TemperatureFromPath();
+    private final TemperatureView view;
+    private final TemperatureFromPath temperature = new TemperatureFromPath();
     private final Handler handler = new Handler();
     private Runnable runnable;
     boolean isRunning = false;
+    float t = 0;
 
     public TemperPresenter(TemperatureView view) {
         this.view= view;
@@ -25,10 +27,8 @@ public class TemperPresenter {
         Log.i("testTemer", view.loadPathTemperature()+"");
         if (view.loadPathTemperature().equals("")) {
             checkPath();
-        } else {
-            float t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));//Convertor.temperatureHuman());
-            runRunnable(t);
         }
+        runRunnable();
     }
 
     public void stopRunnable() {
@@ -38,13 +38,13 @@ public class TemperPresenter {
         }
     }
 
-    private void runRunnable(float t) {
+    private void runRunnable() {
         runnable = new Runnable() {
             @Override
             public void run() {
                 try {
                     isRunning=true;
-                    System.out.println(Math.random()*10);
+                    t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));
                     view.showTemperatureGPU(t);
                     handler.postDelayed(this, 5000);
                 } catch (Exception e) {

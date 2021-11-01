@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
         service = new Intent(MainActivity.this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());

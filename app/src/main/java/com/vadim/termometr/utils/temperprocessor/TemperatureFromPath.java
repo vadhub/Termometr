@@ -11,7 +11,7 @@ public class TemperatureFromPath {
 
     //parsinglist -> cat(paths) -> Class TemperaturePaths
     public String getTemperaturePath() {
-        return "10";//parsingListPaths(getTemperaturePaths());
+        return parsingListPaths(getTemperaturePaths());
     }
 
     //read every field from Map return value temper

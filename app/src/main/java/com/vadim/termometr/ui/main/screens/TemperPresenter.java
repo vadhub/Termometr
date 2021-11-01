@@ -23,7 +23,7 @@ public class TemperPresenter {
         if (view.loadPathTemperature().equals("")) {
             checkPath();
         } else {
-            float t = Float.parseFloat(temperature.catTest(view.loadPathTemperature()));//Convertor.temperatureHuman());
+            float t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));//Convertor.temperatureHuman());
             runRunnable(t);
         }
     }
@@ -46,8 +46,8 @@ public class TemperPresenter {
     }
     private void checkPath() {
         if (!temperature.getTemperaturePath().equals("")) {
-            //view.savePathTemperature(temperature.getTemperaturePath());
-            view.savePathTemperature("10");
+            view.savePathTemperature(temperature.getTemperaturePath());
+            //view.savePathTemperature("10");
         } else {
             view.showError(R.string.warning);
         }

@@ -33,6 +33,7 @@ public class TemperPresenter {
 
     public void stopRunnable() {
         if (runnable != null) {
+            isRunning = false;
             handler.removeCallbacks(runnable);
         }
     }

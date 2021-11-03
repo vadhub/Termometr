@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Check sensor is null if null to commandline temperature
         if (mTempSensor == null) {
             checkPermissions();
+            presenter.getTemperature();
         }
 
-        presenter.getTemperature();
         //AdMob
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override

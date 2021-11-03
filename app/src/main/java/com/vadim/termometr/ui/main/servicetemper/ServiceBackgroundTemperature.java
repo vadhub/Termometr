@@ -80,6 +80,9 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
                 getResources().getString(R.string.service_stop),
                 Toast.LENGTH_SHORT
         ).show();
+        if (mTempSensor != null) {
+            mSensorManager.unregisterListener(this);
+        }
         NotificationHelper.notificationClear(ServiceBackgroundTemperature.this);
         isLife = false;
     }

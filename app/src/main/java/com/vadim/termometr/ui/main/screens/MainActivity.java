@@ -164,6 +164,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (mTempSensor != null) {
+            mSensorManager.unregisterListener(this);
+        }
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         boolean type = saveData.loadChangedTypeTemperature();
         thermometer.setCurrentTemp(event.values[0], type);

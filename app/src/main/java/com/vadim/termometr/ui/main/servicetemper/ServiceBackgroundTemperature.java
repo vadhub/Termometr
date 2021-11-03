@@ -34,8 +34,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         if (presenter != null) {
             presenter.getTemperature();
         }
-        Log.i("temperPath", path+isLife);
-
         return START_NOT_STICKY;
     }
 
@@ -43,7 +41,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void onCreate() {
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
             mSensorManager.registerListener(
@@ -54,7 +52,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         }
 
         if (mTempSensor == null) {
-            Log.i("preset", "pre");
             presenter = new TemperPresenter(this);
         }
     }
@@ -116,7 +113,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public String loadPathTemperature() {
-        Log.i("loadPathTemperature", path);
         return path;
     }
 }

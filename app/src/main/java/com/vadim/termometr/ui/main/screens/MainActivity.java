@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == READ_REQUEST) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                presenter.getTemperature();
+                presenter = new TemperPresenter(this);
+
             }
         }
     }
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new TemperPresenter(this);
+
         saveData = new SaveData(this);
         aSwitchService = (Switch) findViewById(R.id.switchService);
         thermometer = (Termometr) findViewById(R.id.thermometer);
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             checkPermissions();
         }
 
+        presenter.getTemperature();
         //AdMob
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     READ_REQUEST
             );
         } else {
-            presenter.getTemperature();
+            presenter = new TemperPresenter(this);
         }
     }
 

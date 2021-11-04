@@ -68,15 +68,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
-        service = new Intent(MainActivity.this, ServiceBackgroundTemperature.class);
-        service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
-        service.putExtra("temperPath", saveData.loadPath());
-
         //Check sensor is null if null to commandline temperature
         if (mTempSensor == null) {
             checkPermissions();
             presenter.getTemperature();
         }
+
+        service = new Intent(MainActivity.this, ServiceBackgroundTemperature.class);
+        service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
+        service.putExtra("temperPath", saveData.loadPath());
 
         //AdMob
         MobileAds.initialize(this, new OnInitializationCompleteListener() {

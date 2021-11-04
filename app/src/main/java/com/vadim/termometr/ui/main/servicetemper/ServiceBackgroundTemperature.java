@@ -16,12 +16,13 @@ import com.vadim.termometr.ui.main.screens.TemperPresenter;
 import com.vadim.termometr.ui.main.screens.TemperatureView;
 import com.vadim.termometr.utils.NotificationHelper;
 
-public class ServiceBackgroundTemperature extends Service implements SensorEventListener {
+public class ServiceBackgroundTemperature extends Service implements SensorEventListener, TemperatureView {
 
     protected SensorManager mSensorManager;
     protected Sensor mTempSensor;
     protected boolean isLife = true;
     protected boolean isCelsia;
+    private TemperPresenter presenter;
     private NotificationHelper notificationHelper;
     private String path = "";
 
@@ -30,7 +31,9 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         isLife = true;
         isCelsia = intent.getExtras().getBoolean("typeTemperature");
         path = intent.getExtras().getString("temperPath");
-
+        if (presenter != null) {
+            presenter.getTemperature();
+        }
         return START_NOT_STICKY;
     }
 
@@ -41,11 +44,16 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
+            Toast.makeText(this, "sensor type temperature", Toast.LENGTH_SHORT).show();
             mSensorManager.registerListener(
                     this,
                     mTempSensor,
                     SensorManager.SENSOR_DELAY_NORMAL
             );
+        }
+
+        if (mTempSensor == null) {
+            presenter = new TemperPresenter(this);
         }
     }
 
@@ -80,6 +88,11 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         isLife = false;
     }
 
+    @Override
+    public void showTemperatureGPU(float t) {
+        startForegroundNotification(t);
+    }
+
     private void startForegroundNotification(float t){
         startForeground(
                 NotificationHelper.NOTIFICATION_ID,
@@ -91,9 +104,19 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         );
     }
 
-//    @Override
-//    public void showError(int str) {
-//        Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
-//        isLife = false;
-//    }
+    @Override
+    public void showError(int str) {
+        Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
+        isLife = false;
+    }
+
+    @Override
+    public void savePathTemperature(String path) {
+
+    }
+
+    @Override
+    public String loadPathTemperature() {
+        return path;
+    }
 }

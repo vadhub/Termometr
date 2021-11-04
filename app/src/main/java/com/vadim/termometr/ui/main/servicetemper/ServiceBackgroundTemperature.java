@@ -41,7 +41,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
     public void onCreate() {
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mTempSensor = null;//mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_TEMPERATURE);
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
             mSensorManager.registerListener(

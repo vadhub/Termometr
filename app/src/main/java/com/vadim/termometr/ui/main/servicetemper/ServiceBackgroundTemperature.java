@@ -44,7 +44,6 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         notificationHelper = new NotificationHelper();
         if (mTempSensor != null) {
-            Toast.makeText(this, "sensor type temperature", Toast.LENGTH_SHORT).show();
             mSensorManager.registerListener(
                     this,
                     mTempSensor,

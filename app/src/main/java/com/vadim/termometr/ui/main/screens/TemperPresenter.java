@@ -53,9 +53,9 @@ public class TemperPresenter {
                 }
             }
         };
-//        if (!isRunning) {
-//            runnable.run();
-//        }
+        if (!isRunning) {
+            runnable.run();
+        }
 
     }
     private void checkPath() {

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (requestCode == READ_REQUEST) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 presenter = new TemperPresenter(this);
-
+                presenter.getTemperature();
             }
         }
     }
@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Check sensor is null if null to commandline temperature
         if (mTempSensor == null) {
             checkPermissions();
-            presenter.getTemperature();
         }
 
         service = new Intent(MainActivity.this, ServiceBackgroundTemperature.class);
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             );
         } else {
             presenter = new TemperPresenter(this);
+            presenter.getTemperature();
         }
     }
 

@@ -10,8 +10,8 @@ android {
         applicationId "com.vadim.termometr"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 12
-        versionName "3.2.4"
+        versionCode 14
+        versionName "3.2.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

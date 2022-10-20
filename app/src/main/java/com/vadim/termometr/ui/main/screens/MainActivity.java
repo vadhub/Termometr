@@ -16,14 +16,12 @@ import com.vadim.termometr.utils.NotificationHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Thermometer thermometer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Switch aSwitchService = (Switch) findViewById(R.id.switchService);
-        thermometer = (Thermometer) findViewById(R.id.thermometer);
+        Thermometer thermometer = (Thermometer) findViewById(R.id.thermometer);
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
 

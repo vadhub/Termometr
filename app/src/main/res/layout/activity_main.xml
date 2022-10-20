@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.main.screens.MainActivity">
-
-
-    <com.vadim.termometr.ui.main.temperatureview.Thermometer
-        android:id="@+id/thermometer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="80dp"
-        app:innerColor="@color/innerColor"
-        app:middleColor="@color/middleColor"
-        app:outerColor="@color/outerColor"
-        app:radius="60dp" />
-
-    <TextView
-        android:id="@+id/temterature"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textColor="@color/outerColor"
-        android:text="" />
-
 
     <Switch
         android:id="@+id/switchService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/start_notification" />
+        android:layout_gravity="center"
+        android:text="@string/start_notification"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:id="@+id/temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="0000"
+        android:textSize="24sp" />
+
+    <com.vadim.termometr.ui.main.temperatureview.Thermometer
+        android:id="@+id/thermometer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        app:innerColor="@color/innerColor"
+        app:middleColor="@color/middleColor"
+        app:outerColor="@color/outerColor"
+        app:radius="60dp" />
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -10,23 +10,30 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Switch;
+import android.widget.TextView;
+
 import com.vadim.termometr.R;
 import com.vadim.termometr.ui.main.temperatureview.Thermometer;
 import com.vadim.termometr.utils.NotificationHelper;
 
 public class MainActivity extends AppCompatActivity {
 
+    //todo #2 create bound with service
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Switch aSwitchService = (Switch) findViewById(R.id.switchService);
-        Thermometer thermometer = (Thermometer) findViewById(R.id.thermometer);
+        Thermometer thermometer = findViewById(R.id.thermometer);
+        TextView temperature = findViewById(R.id.temperature);
+
+        //todo #3 move in service it ----------->
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-
-
         float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
+        //<---------------
 
+        temperature.setText(temp+"");
         thermometer.setCurrentTemp(temp, true);
 
         //switch

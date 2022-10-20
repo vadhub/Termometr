@@ -12,8 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.vadim.termometr.R;
-import com.vadim.termometr.ui.main.screens.TemperPresenter;
-import com.vadim.termometr.ui.main.screens.TemperatureView;
 import com.vadim.termometr.utils.NotificationHelper;
 
 public class ServiceBackgroundTemperature extends Service implements SensorEventListener, TemperatureView {

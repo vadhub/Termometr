@@ -1,5 +1,6 @@
 package com.vadim.termometr.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -54,7 +55,7 @@ public class NotificationHelper extends Application {
         );
 
         Intent resultIntent = new Intent(context, MainActivity.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent resultPendingIntent = PendingIntent.getActivity(
                 context,
                 0,
                 resultIntent,

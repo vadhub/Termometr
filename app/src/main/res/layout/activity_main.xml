@@ -7,7 +7,7 @@
     tools:context=".ui.main.screens.MainActivity">
 
 
-    <com.vadim.termometr.ui.main.temperatureview.Termometr
+    <com.vadim.termometr.ui.main.temperatureview.Thermometer
         android:id="@+id/thermometer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,25 +23,13 @@
 
     <TextView
         android:id="@+id/temterature"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="@color/outerColor"
         android:text="" />
 
-    <!--ca-app-pub-3940256099942544/6300978111-->
-    <!--MY   ca-app-pub-5356301729869498/3710301649-->
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-5356301729869498/3710301649">
-    </com.google.android.gms.ads.AdView>
 
     <Switch
         android:id="@+id/switchService"

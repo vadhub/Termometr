@@ -6,11 +6,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
+
 import com.vadim.termometr.R;
 import com.vadim.termometr.ui.main.screens.TemperPresenter;
 import com.vadim.termometr.ui.main.screens.TemperatureView;
@@ -92,7 +92,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
         startForegroundNotification(t);
     }
 
-    private void startForegroundNotification(float t){
+    private void startForegroundNotification(float t) {
         startForeground(
                 NotificationHelper.NOTIFICATION_ID,
                 notificationHelper.viewNotification(
@@ -105,7 +105,7 @@ public class ServiceBackgroundTemperature extends Service implements SensorEvent
 
     @Override
     public void showError(int str) {
-        Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "" + getResources().getString(str), Toast.LENGTH_SHORT).show();
         isLife = false;
     }
 

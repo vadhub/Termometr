@@ -6,14 +6,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,24 +20,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Switch;
 import android.widget.Toast;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import com.vadim.termometr.R;
 import com.vadim.termometr.ui.main.servicetemper.ServiceBackgroundTemperature;
-import com.vadim.termometr.ui.main.temperatureview.Termometr;
+import com.vadim.termometr.ui.main.temperatureview.Thermometer;
 import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.utils.SaveData;
 
-@TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class MainActivity extends AppCompatActivity implements SensorEventListener, TemperatureView {
 
-    private Termometr thermometer;
-    private AdView mAdView;
-    private Switch aSwitchService;
+    private Thermometer thermometer;
     private TemperPresenter presenter;
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
@@ -63,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         saveData = new SaveData(this);
-        aSwitchService = (Switch) findViewById(R.id.switchService);
-        thermometer = (Termometr) findViewById(R.id.thermometer);
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        Switch aSwitchService = (Switch) findViewById(R.id.switchService);
+        thermometer = (Thermometer) findViewById(R.id.thermometer);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
         //Check sensor is null if null to commandline temperature
@@ -76,16 +68,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         service = new Intent(MainActivity.this, ServiceBackgroundTemperature.class);
         service.putExtra("typeTemperature", saveData.loadChangedTypeTemperature());
         service.putExtra("temperPath", saveData.loadPath());
-
-        //AdMob
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         //check on off Service
         aSwitchService.setChecked(saveData.loadState());
@@ -114,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ) {
             ActivityCompat.requestPermissions(
                     MainActivity.this,
-                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     READ_REQUEST
             );
         } else {
@@ -176,11 +158,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boolean type = saveData.loadChangedTypeTemperature();
         thermometer.setCurrentTemp(event.values[0], type);
         getSupportActionBar().setTitle(
-                        Convertor.temperatureConvertor(
-                                        event.values[0],
-                                        type
-                                )
-                );
+                Convertor.temperatureConvertor(
+                        event.values[0],
+                        type
+                )
+        );
     }
 
     @Override
@@ -199,16 +181,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boolean type = saveData.loadChangedTypeTemperature();
         thermometer.setCurrentTemp(temperature, type);
         getSupportActionBar().setTitle(
-                        Convertor.temperatureConvertor(
-                                        temperature,
-                                        type
-                        )
-                );
+                Convertor.temperatureConvertor(
+                        temperature,
+                        type
+                )
+        );
     }
 
     @Override
     public void showError(int str) {
-        Toast.makeText(this, ""+getResources().getString(str), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "" + getResources().getString(str), Toast.LENGTH_SHORT).show();
         presenter = null;
     }
 

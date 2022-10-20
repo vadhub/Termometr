@@ -13,14 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Termometr">
 
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
-        <!-- ca-app-pub-5356301729869498~7102025396 -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5356301729869498~7102025396" />
 
         <activity android:name=".ui.main.screens.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

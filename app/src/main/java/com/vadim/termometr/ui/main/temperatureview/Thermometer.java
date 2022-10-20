@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.vadim.termometr.R;
 
-public class Termometr extends View {
+public class Thermometer extends View {
 
     private float outerCircleRadius, outerRectRadius;
     private Paint outerPaint;
@@ -37,19 +37,19 @@ public class Termometr extends View {
     private float minTemp = MIN_TEMP;
     private float rangeTemp = RANGE_TEMP;
     private float currentTemp = MIN_TEMP;
-    private Rect rect = new Rect();
+    private final Rect rect = new Rect();
 
-    public Termometr(Context context) {
+    public Thermometer(Context context) {
         super(context);
         init(context, null);
     }
 
-    public Termometr(Context context, AttributeSet attrs) {
+    public Thermometer(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context,attrs);
     }
 
-    public Termometr(Context context, AttributeSet attrs, int defStyleAttr) {
+    public Thermometer(Context context, AttributeSet attrs, int defStyleAttr) {
         super (context, attrs, defStyleAttr);
         init(context, attrs);
     }

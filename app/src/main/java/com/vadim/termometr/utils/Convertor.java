@@ -1,14 +1,16 @@
 package com.vadim.termometr.utils;
 
+import android.annotation.SuppressLint;
+
 public class Convertor {
     public static float fahrenheit(float temperCelsia) {
-        float far = (temperCelsia*9/5)+32;
-        return far;
+        return (temperCelsia*9/5)+32;
     }
 
+    @SuppressLint("DefaultLocale")
     public static String temperatureConvertor(float temperature, boolean isCelsius) {
         float farTemper;
-        String temper = String.format("%.0f", temperature)+"C°";
+        @SuppressLint("DefaultLocale") String temper = String.format("%.0f", temperature)+"C°";
 
         if (!isCelsius) {
             farTemper = Convertor.fahrenheit(temperature);

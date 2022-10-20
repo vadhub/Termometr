@@ -1,21 +1,15 @@
 package com.vadim.termometr.ui.main.screens;
 
 import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.vadim.termometr.R;
 import com.vadim.termometr.utils.temperprocessor.TemperatureFromPath;
 import com.vadim.termometr.utils.Convertor;
-
-import java.util.Random;
 
 public class TemperPresenter {
 
     private final TemperatureView view;
     private final TemperatureFromPath temperature = new TemperatureFromPath();
     private final Handler handler = new Handler();
-    private Runnable runnable;
     boolean isRunning = false;
     float t = 0;
 
@@ -31,19 +25,12 @@ public class TemperPresenter {
         }
     }
 
-    public void stopRunnable() {
-        if (runnable != null) {
-            isRunning = false;
-            handler.removeCallbacks(runnable);
-        }
-    }
-
     private void runRunnable() {
-        runnable = new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 try {
-                    isRunning=true;
+                    isRunning = true;
                     t = Convertor.temperatureHuman(temperature.cat(view.loadPathTemperature()));
                     view.showTemperatureGPU(t);
                     handler.postDelayed(this, 5000);

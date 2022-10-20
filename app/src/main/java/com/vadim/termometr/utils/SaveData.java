@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 
 public class SaveData {
     private SharedPreferences sPref;
-    private Context context;
+    private final Context context;
     public SaveData(Context context) {
         this.context=context;
     }

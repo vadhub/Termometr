@@ -29,9 +29,6 @@ public class Thermometer extends View {
     private static final int NB_GRADUATIONS = 8;
     public static final float MAX_TEMP = 100, MIN_TEMP = 0;
     private static final float RANGE_TEMP = 80;
-    private static final int NB_GRADUATIONS_F = 8;
-    private static final float MAX_TEMP_F = 150, MIN_TEMP_F = 30;
-    private static final float RANGE_TEMP_F = 150;
     private int nbGraduations = NB_GRADUATIONS;
     private float maxTemp = MAX_TEMP;
     private float minTemp = MIN_TEMP;
@@ -55,9 +52,8 @@ public class Thermometer extends View {
     }
 
 
-    public void setCurrentTemp(float currentTemp, boolean isCelsius) {
+    public void setCurrentTemp(float currentTemp) {
 
-        changeUnit(isCelsius);
 
         if (currentTemp > maxTemp) {
             this.currentTemp = maxTemp;
@@ -68,10 +64,6 @@ public class Thermometer extends View {
         }
 
         invalidate();
-    }
-
-    public float getMinTemp() {
-        return minTemp;
     }
 
     public void init(Context context, AttributeSet attrs) {
@@ -120,22 +112,6 @@ public class Thermometer extends View {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return dpValue * (metrics.densityDpi / 160f);
-    }
-
-    public void changeUnit(boolean isCelsius) {
-        if (isCelsius) {
-            nbGraduations = NB_GRADUATIONS;
-            maxTemp = MAX_TEMP;
-            minTemp = MIN_TEMP;
-            rangeTemp = RANGE_TEMP;
-        } else {
-            nbGraduations = NB_GRADUATIONS_F;
-            maxTemp = MAX_TEMP_F;
-            minTemp = MIN_TEMP_F;
-            rangeTemp = RANGE_TEMP_F;
-        }
-
-        invalidate();
     }
 
     @Override

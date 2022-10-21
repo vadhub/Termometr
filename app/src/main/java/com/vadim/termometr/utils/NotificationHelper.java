@@ -1,8 +1,6 @@
 package com.vadim.termometr.utils;
 
 import static com.vadim.termometr.utils.App.CHANNEL_ID;
-import static com.vadim.termometr.utils.App.NOTIFICATION_ID;
-
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,7 +14,7 @@ import com.vadim.termometr.ui.main.screens.MainActivity;
 
 public class NotificationHelper {
     public final Context context;
-
+    public static final int NOTIFICATION_ID = 1223243;
     public NotificationHelper(Context context) {
         this.context = context;
     }

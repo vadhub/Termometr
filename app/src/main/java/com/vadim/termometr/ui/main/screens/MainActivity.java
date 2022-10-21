@@ -1,17 +1,11 @@
 package com.vadim.termometr.ui.main.screens;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -60,36 +54,16 @@ public class MainActivity extends AppCompatActivity {
         //switch
         aSwitchService.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                doBindService();
+                if (!mShouldUnbind) {
+                    doBindService();
+                } else {
+                    serviceBackgroundTemperature.showNotification();
+                }
+
             } else {
-                doUnbindService();
+                serviceBackgroundTemperature.cleanedNotification();
             }
         });
-    }
-
-    //menu option on action bar
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.change_display_temper, menu);
-        return true;
-    }
-
-    //switch between farengete and celsia
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.celsius_menu:
-                serviceBackgroundTemperature.setTypeTemperature(true);
-                break;
-
-            case R.id.fahrenheit_menu:
-                serviceBackgroundTemperature.setTypeTemperature(false);
-                break;
-        }
-
-        return true;
     }
 
     void doUnbindService() {

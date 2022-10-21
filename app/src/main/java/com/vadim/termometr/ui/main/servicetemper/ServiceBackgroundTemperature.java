@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.vadim.termometr.R;
 import com.vadim.termometr.ui.main.temperatureview.Thermometer;
+import com.vadim.termometr.utils.App;
 import com.vadim.termometr.utils.NotificationHelper;
 
 public class ServiceBackgroundTemperature extends Service {
@@ -38,7 +39,7 @@ public class ServiceBackgroundTemperature extends Service {
         super.onCreate();
         notificationHelper = new NotificationHelper(this);
         builder = notificationHelper.viewNotification();
-        startForeground(NotificationHelper.NOTIFICATION_ID, builder.build());
+        startForeground(App.NOTIFICATION_ID, builder.build());
     }
 
     @Nullable
@@ -55,7 +56,7 @@ public class ServiceBackgroundTemperature extends Service {
             temperature.setText(temp+"");
             thermometer.setCurrentTemp(temp, true);
             builder.setCustomContentView(notificationHelper.thermometerView(temp, true));
-            notificationHelper.getNotificationManager().notify(NotificationHelper.NOTIFICATION_ID, builder.build());
+            App.notificationManager.notify(App.NOTIFICATION_ID, builder.build());
         };
 
         PeriodicTask periodicTask = new PeriodicTask(runnable);

@@ -34,9 +34,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            serviceBackgroundTemperature = null;
         }
     };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, ServiceBackgroundTemperature.class);
+        bindService(intent, connection, BIND_AUTO_CREATE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
         Switch aSwitchService = (Switch) findViewById(R.id.switchService);
         Thermometer thermometer = findViewById(R.id.thermometer);
         TextView temperature = findViewById(R.id.temperature);
+
+        if (serviceBackgroundTemperature != null) {
+            serviceBackgroundTemperature.setTemperature(temperature, thermometer);
+        }
 
         //switch
         aSwitchService.setOnCheckedChangeListener((buttonView, isChecked) -> {

@@ -38,16 +38,21 @@ public class ServiceBackgroundTemperature extends Service {
 
     public void setTemperature(TextView temperature, Thermometer thermometer) {
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
-        temperature.setText(temp+"");
-        thermometer.setCurrentTemp(temp, true);
+
+        Runnable runnable = () -> {
+            float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
+            temperature.setText(temp+"");
+            thermometer.setCurrentTemp(temp, true);
+        };
+
+        PeriodicTask periodicTask = new PeriodicTask(runnable);
+        periodicTask.startPeriodic();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         notificationHelper = new NotificationHelper();
-
     }
 
     @Nullable

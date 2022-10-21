@@ -24,10 +24,7 @@
 
         <service
             android:name=".ui.main.servicetemper.ServiceBackgroundTemperature"
-            android:enabled="true"
-            android:exported="false"
-            android:label="serviceRegistTemper"
-            android:process=":ServiceBackgroundTemperature" />
+            android:exported="false"/>
     </application>
 
 </manifest>

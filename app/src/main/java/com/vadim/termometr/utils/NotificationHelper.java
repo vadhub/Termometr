@@ -29,7 +29,7 @@ public class NotificationHelper {
 
         return new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setCustomContentView(thermometerView(32f, true))
+                .setCustomContentView(thermometerView("32"))
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
@@ -43,14 +43,14 @@ public class NotificationHelper {
         App.notificationManager.cancel(NOTIFICATION_ID);
     }
 
-    public RemoteViews thermometerView(float temper, boolean typeTemper) {
+    public RemoteViews thermometerView(String temper) {
         RemoteViews thermometerNotify = new RemoteViews(
                 context.getPackageName(),
                 R.layout.termometer_notif
         );
         thermometerNotify.setTextViewText(
                 R.id.textViewTemper,
-                Convertor.temperatureConvertor(temper, typeTemper)
+                temper
         );
         return thermometerNotify;
     }

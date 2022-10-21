@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat;
 import com.vadim.termometr.R;
 import com.vadim.termometr.ui.main.temperatureview.Thermometer;
 import com.vadim.termometr.utils.App;
+import com.vadim.termometr.utils.Convertor;
 import com.vadim.termometr.utils.NotificationHelper;
 import com.vadim.termometr.utils.SaveData;
 
@@ -44,7 +45,6 @@ public class ServiceBackgroundTemperature extends Service {
     public void onCreate() {
         super.onCreate();
         saveData = new SaveData(this);
-
         notificationHelper = new NotificationHelper(this);
         builder = notificationHelper.viewNotification();
         startForeground(App.NOTIFICATION_ID, builder.build());
@@ -58,33 +58,35 @@ public class ServiceBackgroundTemperature extends Service {
 
     public void setTemperature(TextView temperature, Thermometer thermometer) {
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-
+        boolean isCelsius = saveData.loadChangedTypeTemperature();
         @SuppressLint("SetTextI18n") Runnable runnable = () -> {
-            try {
-                float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
-                handler.post(() -> {
-                    temperature.setText(temp+"");
-                });
-                thermometer.setCurrentTemp(temp, true);
-                builder.setCustomContentView(notificationHelper.thermometerView(temp, true));
-                App.notificationManager.notify(App.NOTIFICATION_ID, builder.build());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
+            String temperString = Convertor.temperatureConvertor(temp, isCelsius);
+            handler.post(() -> {
+                temperature.setText(temperString);
+            });
+            thermometer.setCurrentTemp(temp, isCelsius);
+            builder.setCustomContentView(notificationHelper.thermometerView(temperString));
+            App.notificationManager.notify(App.NOTIFICATION_ID, builder.build());
         };
 
         PeriodicTask periodicTask = new PeriodicTask(runnable);
         periodicTask.startPeriodic();
     }
 
+    public void setTypeTemperature(boolean isCelsius) {
+        saveData.saveChangedTypeTemperature(isCelsius);
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        stopSelf();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(
-                getApplicationContext(),
-                getResources().getString(R.string.service_stop),
-                Toast.LENGTH_SHORT
-        ).show();
         notificationHelper.notificationClear();
         builder = null;
         notificationHelper = null;

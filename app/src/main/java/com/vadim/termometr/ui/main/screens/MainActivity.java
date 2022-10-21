@@ -3,6 +3,7 @@ package com.vadim.termometr.ui.main.screens;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -21,7 +22,7 @@ import com.vadim.termometr.ui.main.temperatureview.Thermometer;
 public class MainActivity extends AppCompatActivity {
 
     private ServiceBackgroundTemperature serviceBackgroundTemperature;
-    private boolean isConnect;
+    private boolean mShouldUnbind;
     private Thermometer thermometer;
     private TextView temperature;
 
@@ -31,34 +32,38 @@ public class MainActivity extends AppCompatActivity {
             ServiceBackgroundTemperature.TemperatureBinder binder = (ServiceBackgroundTemperature.TemperatureBinder) service;
             serviceBackgroundTemperature = binder.getService();
             serviceBackgroundTemperature.setTemperature(temperature, thermometer);
-            isConnect = true;
+            mShouldUnbind = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             serviceBackgroundTemperature = null;
-            isConnect = false;
+            mShouldUnbind = false;
         }
     };
+
+    void doBindService() {
+        Intent intent = new Intent(this, ServiceBackgroundTemperature.class);
+        bindService(intent, connection, BIND_AUTO_CREATE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Switch aSwitchService = (Switch) findViewById(R.id.switchService);
+        aSwitchService.setChecked(true);
         thermometer = findViewById(R.id.thermometer);
         temperature = findViewById(R.id.temperature);
-        Intent intent = new Intent(this, ServiceBackgroundTemperature.class);
-        bindService(intent, connection, BIND_AUTO_CREATE);
+        doBindService();
 
         //switch
         aSwitchService.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-
+                doBindService();
             } else {
-
+                doUnbindService();
             }
-
         });
     }
 
@@ -71,19 +76,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //switch between farengete and celsia
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.celsius_menu:
-
+                serviceBackgroundTemperature.setTypeTemperature(true);
                 break;
 
             case R.id.fahrenheit_menu:
-
+                serviceBackgroundTemperature.setTypeTemperature(false);
                 break;
         }
 
         return true;
     }
 
+    void doUnbindService() {
+        if (mShouldUnbind) {
+            unbindService(connection);
+            mShouldUnbind = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbindService();
+    }
 }

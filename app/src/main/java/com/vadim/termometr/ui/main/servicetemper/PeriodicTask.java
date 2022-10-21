@@ -15,7 +15,7 @@ public class PeriodicTask {
     }
 
     public void startPeriodic() {
-        scheduledExecutorService.scheduleAtFixedRate(task, 5, 5, SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(task, 0, 10, SECONDS);
     }
 
 }

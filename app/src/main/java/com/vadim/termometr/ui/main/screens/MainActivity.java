@@ -2,10 +2,14 @@ package com.vadim.termometr.ui.main.screens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,12 +17,26 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.vadim.termometr.R;
+import com.vadim.termometr.ui.main.servicetemper.ServiceBackgroundTemperature;
 import com.vadim.termometr.ui.main.temperatureview.Thermometer;
 import com.vadim.termometr.utils.NotificationHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    //todo #2 create bound with service
+    private ServiceBackgroundTemperature serviceBackgroundTemperature;
+
+    private final ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ServiceBackgroundTemperature.TemperatureBinder binder = (ServiceBackgroundTemperature.TemperatureBinder) service;
+            serviceBackgroundTemperature = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +45,6 @@ public class MainActivity extends AppCompatActivity {
         Switch aSwitchService = (Switch) findViewById(R.id.switchService);
         Thermometer thermometer = findViewById(R.id.thermometer);
         TextView temperature = findViewById(R.id.temperature);
-
-        //todo #3 move in service it ----------->
-        Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
-        //<---------------
-
-        temperature.setText(temp+"");
-        thermometer.setCurrentTemp(temp, true);
 
         //switch
         aSwitchService.setOnCheckedChangeListener((buttonView, isChecked) -> {

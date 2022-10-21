@@ -14,17 +14,8 @@ public class PeriodicTask {
         this.task = task;
     }
 
-
     public void startPeriodic() {
-        ScheduledFuture<?> periodicFuture = scheduledExecutorService.scheduleAtFixedRate(task, 5, 5, SECONDS);
-    }
-
-    private final ScheduledExecutorService scheduler =
-            Executors.newScheduledThreadPool(1);
-
-    public void beepForAnHour() {
-        final Runnable beeper = () -> System.out.println("beep");
-        scheduler.scheduleAtFixedRate(task, 0, 10, SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(task, 5, 5, SECONDS);
     }
 
 }

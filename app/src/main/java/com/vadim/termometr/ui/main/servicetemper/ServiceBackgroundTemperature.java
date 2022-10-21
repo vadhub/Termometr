@@ -1,5 +1,6 @@
 package com.vadim.termometr.ui.main.servicetemper;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,13 +19,15 @@ import com.vadim.termometr.R;
 import com.vadim.termometr.ui.main.temperatureview.Thermometer;
 import com.vadim.termometr.utils.App;
 import com.vadim.termometr.utils.NotificationHelper;
+import com.vadim.termometr.utils.SaveData;
 
 public class ServiceBackgroundTemperature extends Service {
 
     private NotificationHelper notificationHelper;
     private NotificationCompat.Builder builder;
     private final IBinder binder = new TemperatureBinder();
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private SaveData saveData;
 
     public class TemperatureBinder extends Binder {
         public ServiceBackgroundTemperature getService() {
@@ -40,6 +43,8 @@ public class ServiceBackgroundTemperature extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        saveData = new SaveData(this);
+
         notificationHelper = new NotificationHelper(this);
         builder = notificationHelper.viewNotification();
         startForeground(App.NOTIFICATION_ID, builder.build());
@@ -54,15 +59,12 @@ public class ServiceBackgroundTemperature extends Service {
     public void setTemperature(TextView temperature, Thermometer thermometer) {
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
-        Runnable runnable = () -> {
+        @SuppressLint("SetTextI18n") Runnable runnable = () -> {
             try {
                 float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
-                System.out.println("ppppppppppppppppppp");
-
                 handler.post(() -> {
                     temperature.setText(temp+"");
                 });
-
                 thermometer.setCurrentTemp(temp, true);
                 builder.setCustomContentView(notificationHelper.thermometerView(temp, true));
                 App.notificationManager.notify(App.NOTIFICATION_ID, builder.build());
@@ -72,7 +74,7 @@ public class ServiceBackgroundTemperature extends Service {
         };
 
         PeriodicTask periodicTask = new PeriodicTask(runnable);
-        periodicTask.beepForAnHour();
+        periodicTask.startPeriodic();
     }
 
     @Override

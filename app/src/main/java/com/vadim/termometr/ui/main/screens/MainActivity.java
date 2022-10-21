@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import com.vadim.termometr.R;
 import com.vadim.termometr.ui.main.servicetemper.ServiceBackgroundTemperature;
 import com.vadim.termometr.ui.main.temperatureview.Thermometer;
-import com.vadim.termometr.utils.NotificationHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
 
-                NotificationHelper.notificationClear(MainActivity.this);
             }
 
         });

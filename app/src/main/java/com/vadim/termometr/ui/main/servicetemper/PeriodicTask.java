@@ -13,6 +13,7 @@ public class PeriodicTask {
     }
 
     public void startPeriodic() {
+        System.out.println("------");
         scheduledExecutorService.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
     }
 

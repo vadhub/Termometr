@@ -18,4 +18,8 @@ public class PeriodicTask {
         scheduledExecutorService.scheduleAtFixedRate(task, 0, 10, SECONDS);
     }
 
+    public void stopPeriodic() {
+        scheduledExecutorService.shutdown();
+    }
+
 }

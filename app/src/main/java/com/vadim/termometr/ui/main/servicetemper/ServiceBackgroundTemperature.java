@@ -3,16 +3,19 @@ package com.vadim.termometr.ui.main.servicetemper;
 import static com.vadim.termometr.utils.NotificationHelper.NOTIFICATION_ID;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.vadim.termometr.ui.main.temperatureview.Thermometer;
@@ -22,7 +25,9 @@ import com.vadim.termometr.utils.NotificationHelper;
 public class ServiceBackgroundTemperature extends Service {
 
     private NotificationHelper notificationHelper;
+    private PeriodicTask periodicTask;
     private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
     private final IBinder binder = new TemperatureBinder();
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -32,17 +37,13 @@ public class ServiceBackgroundTemperature extends Service {
         }
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        notificationHelper = new NotificationHelper(this);
+        notificationManager = App.notificationManager;
+        notificationHelper = new NotificationHelper(this, notificationManager);
         builder = notificationHelper.viewNotification();
-        showNotification();
     }
 
     @Nullable
@@ -52,8 +53,10 @@ public class ServiceBackgroundTemperature extends Service {
     }
 
     public void setTemperature(TextView temperature, Thermometer thermometer) {
+        startForeground(NOTIFICATION_ID, builder.build());
+
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        @SuppressLint("SetTextI18n") Runnable runnable = () -> {
+        Runnable runnable = () -> {
 
             float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
             handler.post(() -> {
@@ -61,20 +64,23 @@ public class ServiceBackgroundTemperature extends Service {
             });
             thermometer.setCurrentTemp(temp);
             builder.setCustomContentView(notificationHelper.thermometerView(temp+" C°"));
-            App.notificationManager.notify(NOTIFICATION_ID, builder.build());
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+            notificationManager.cancel(NOTIFICATION_ID);
         };
 
-        PeriodicTask periodicTask = new PeriodicTask(runnable);
+        periodicTask = new PeriodicTask(runnable);
         periodicTask.startPeriodic();
     }
 
     public void cleanedNotification() {
-        notificationHelper.notificationClear();
+        periodicTask.stopPeriodic();
+        if (periodicTask != null) {
+            periodicTask = null;
+        }
+        stopForeground(Service.STOP_FOREGROUND_LEGACY);
+        notificationManager.cancel(NOTIFICATION_ID);
     }
 
-    public void showNotification() {
-        startForeground(NOTIFICATION_ID, builder.build());
-    }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
@@ -88,6 +94,11 @@ public class ServiceBackgroundTemperature extends Service {
         notificationHelper.notificationClear();
         builder = null;
         notificationHelper = null;
+        if (periodicTask != null) {
+            periodicTask.stopPeriodic();
+            periodicTask = null;
+        }
+
     }
 
 

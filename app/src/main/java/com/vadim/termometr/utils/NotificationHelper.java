@@ -2,6 +2,7 @@ package com.vadim.termometr.utils;
 
 import static com.vadim.termometr.utils.App.CHANNEL_ID;
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,9 @@ import com.vadim.termometr.ui.main.screens.MainActivity;
 public class NotificationHelper {
     public final Context context;
     public static final int NOTIFICATION_ID = 1223243;
-    public NotificationHelper(Context context) {
+    private final NotificationManager notificationManager;
+    public NotificationHelper(Context context, NotificationManager notificationManager) {
+        this.notificationManager = notificationManager;
         this.context = context;
     }
 
@@ -28,7 +31,7 @@ public class NotificationHelper {
         return new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setCustomContentView(thermometerView("32"))
-                .setOngoing(true)
+                .setOngoing(false)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -38,7 +41,7 @@ public class NotificationHelper {
     }
 
     public void notificationClear() {
-        App.notificationManager.cancel(NOTIFICATION_ID);
+        notificationManager.cancel(NOTIFICATION_ID);
     }
 
     public RemoteViews thermometerView(String temper) {

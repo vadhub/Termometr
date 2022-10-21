@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ public class ServiceBackgroundTemperature extends Service {
     private NotificationHelper notificationHelper;
     private NotificationCompat.Builder builder;
     private final IBinder binder = new TemperatureBinder();
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     public class TemperatureBinder extends Binder {
         public ServiceBackgroundTemperature getService() {
@@ -52,16 +55,24 @@ public class ServiceBackgroundTemperature extends Service {
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         Runnable runnable = () -> {
-            float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
-            temperature.setText(temp+"");
-            thermometer.setCurrentTemp(temp, true);
-            builder.setCustomContentView(notificationHelper.thermometerView(temp, true));
-            App.notificationManager.notify(App.NOTIFICATION_ID, builder.build());
+            try {
+                float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
+                System.out.println("ppppppppppppppppppp");
+
+                handler.post(() -> {
+                    temperature.setText(temp+"");
+                });
+
+                thermometer.setCurrentTemp(temp, true);
+                builder.setCustomContentView(notificationHelper.thermometerView(temp, true));
+                App.notificationManager.notify(App.NOTIFICATION_ID, builder.build());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         };
 
         PeriodicTask periodicTask = new PeriodicTask(runnable);
-        periodicTask.startPeriodic();
-        System.out.println("ppppppppppppppppppp");
+        periodicTask.beepForAnHour();
     }
 
     @Override

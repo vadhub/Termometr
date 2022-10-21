@@ -1,8 +1,10 @@
 package com.vadim.termometr.ui.main.servicetemper;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ScheduledFuture;
 
 public class PeriodicTask {
     private final Runnable task;
@@ -12,9 +14,17 @@ public class PeriodicTask {
         this.task = task;
     }
 
+
     public void startPeriodic() {
-        System.out.println("------");
-        scheduledExecutorService.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
+        ScheduledFuture<?> periodicFuture = scheduledExecutorService.scheduleAtFixedRate(task, 5, 5, SECONDS);
+    }
+
+    private final ScheduledExecutorService scheduler =
+            Executors.newScheduledThreadPool(1);
+
+    public void beepForAnHour() {
+        final Runnable beeper = () -> System.out.println("beep");
+        scheduler.scheduleAtFixedRate(task, 0, 10, SECONDS);
     }
 
 }

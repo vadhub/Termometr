@@ -21,38 +21,35 @@ import com.vadim.termometr.ui.main.temperatureview.Thermometer;
 public class MainActivity extends AppCompatActivity {
 
     private ServiceBackgroundTemperature serviceBackgroundTemperature;
+    private boolean isConnect;
+    private Thermometer thermometer;
+    private TextView temperature;
 
     private final ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             ServiceBackgroundTemperature.TemperatureBinder binder = (ServiceBackgroundTemperature.TemperatureBinder) service;
             serviceBackgroundTemperature = binder.getService();
+            serviceBackgroundTemperature.setTemperature(temperature, thermometer);
+            isConnect = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             serviceBackgroundTemperature = null;
+            isConnect = false;
         }
     };
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, ServiceBackgroundTemperature.class);
-        bindService(intent, connection, BIND_AUTO_CREATE);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Switch aSwitchService = (Switch) findViewById(R.id.switchService);
-        Thermometer thermometer = findViewById(R.id.thermometer);
-        TextView temperature = findViewById(R.id.temperature);
-
-        if (serviceBackgroundTemperature != null) {
-            serviceBackgroundTemperature.setTemperature(temperature, thermometer);
-        }
+        thermometer = findViewById(R.id.thermometer);
+        temperature = findViewById(R.id.temperature);
+        Intent intent = new Intent(this, ServiceBackgroundTemperature.class);
+        bindService(intent, connection, BIND_AUTO_CREATE);
 
         //switch
         aSwitchService.setOnCheckedChangeListener((buttonView, isChecked) -> {

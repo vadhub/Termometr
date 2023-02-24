@@ -25,19 +25,19 @@ public class NotificationHelper {
     public NotificationCompat.Builder viewNotification() {
 
         Intent resultIntent = new Intent(context, MainActivity.class);
-        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_MUTABLE);
 
         return new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
-                .setCustomContentView(thermometerView("32"))
+                .setCustomContentView(thermometerView("31"))
                 .setOngoing(false)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setTicker("32");
+                .setTicker("31");
     }
 
     public void notificationClear() {

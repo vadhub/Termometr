@@ -37,7 +37,6 @@ public class ServiceBackgroundTemperature extends Service {
         }
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -53,11 +52,9 @@ public class ServiceBackgroundTemperature extends Service {
     }
 
     public void setTemperature(TextView temperature, Thermometer thermometer) {
-        startForeground(NOTIFICATION_ID, builder.build());
 
         Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         Runnable runnable = () -> {
-
             float temp = ((float) intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
             handler.post(() -> {
                 temperature.setText(temp+" C°");
@@ -65,20 +62,22 @@ public class ServiceBackgroundTemperature extends Service {
             thermometer.setCurrentTemp(temp);
             builder.setCustomContentView(notificationHelper.thermometerView(temp+" C°"));
             notificationManager.notify(NOTIFICATION_ID, builder.build());
-            notificationManager.cancel(NOTIFICATION_ID);
         };
 
         periodicTask = new PeriodicTask(runnable);
         periodicTask.startPeriodic();
+
+        startForeground(NOTIFICATION_ID, builder.build());
     }
 
     public void cleanedNotification() {
-        periodicTask.stopPeriodic();
         if (periodicTask != null) {
+            periodicTask.stopPeriodic();
             periodicTask = null;
         }
+
         stopForeground(Service.STOP_FOREGROUND_LEGACY);
-        notificationManager.cancel(NOTIFICATION_ID);
+        notificationHelper.notificationClear();
     }
 
 
